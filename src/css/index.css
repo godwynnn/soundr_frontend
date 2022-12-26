@@ -221,6 +221,7 @@ body{
     
     /* gap: 5px; */
     overflow-y: hidden;
+    overflow-x: hidden;
 }
 
 /* header */
@@ -478,17 +479,88 @@ body{
 
 /* PLAYSTORE SECTION */
 .section_3{
-    width: 100%;
-    height: 90vh;
-    filter: brightness(20%);
+    width: 100% !important;
+    height: 150vh;
+    overscroll-behavior: none;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    /* filter: brightness(20%); */
+    overflow-x: hidden;
+    overflow-y: hidden;
 
     background: url('../css/footer.jpg');
-    margin-top: 10%;
+    margin-top: 15%;
+    /* position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    left: 0; */
+
+    /* border: 1px solid red; */
 }
-.section_3 p{
-   color: white;
-    filter: brightness();
+.section_3-overlay{
+    /* width: 300%; */
+    width: 100%;
+    position: absolute;
+    top:0;
+    left: 0;
+    padding: 5% 10%;
+    /* padding: 0; */
+    height: 100%;
+    /* background-color: black; */
+    /* opacity: 92%; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* flex-wrap: nowrap; */
+    overflow-x: hidden;
+    /* border: 1px solid red; */
 }
+.section_3-overlay p{
+    font-family: 'Chivo Mono';
+    font-size: 40px;
+    text-align: center;
+    color: white;
+    padding: 0% 9%;
+}
+.section_3_content_holder{
+    /* border: 1px solid red; */
+    width: 100%;
+    /* overscroll-behavior: none; */
+    height: 100%;
+    margin: 0;
+    margin-top: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: black; */
+    /* opacity: 90%; */
+    
+    padding: 1% 2%;
+}
+
+/* .section_3_content_holder:first-child{
+    position: sticky;
+    top: 0;
+} */
+.section_3_content{
+    display: flex;
+    /* background-color: black; */
+    opacity: 90%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* border: 1px solid red; */
+    width: 100%;
+    height: 100%;
+
+
+}
+
+
+
 
 /* PLAY FOOTER FEATURE */
 

@@ -2,6 +2,10 @@ import React,{Component,useState,useEffect,useRef} from "react";
 import user_img from '../1.jpeg';
 import music_img from '../2.jpg';
 import burna_img from '../images/burna.jpg'
+
+
+import footer_img1 from '../css/ft1.png'
+import footer_img2 from '../css/ft2.png'
 import music from '../Victony.mp3';
 import { Button } from "@mui/material";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -28,7 +32,8 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { EffectFlip, Pagination, Navigation,EffectCoverflow,Autoplay } from "swiper";
-import {gsap} from "gsap";
+
+import { ScrollTrigger,gsap } from "gsap/all";
 // import Lettering from "./lettering";
 
 // import '../css/index.css'
@@ -75,11 +80,11 @@ const Home=()=>{
     // const progress=useRef()
     const[progress,SetCurrentProgress]=useState(0)
 
-    // Gsap
+    // GSAP
     const header_section1=useRef(null);
     const header_section2=useRef(null);
 
-
+    gsap.registerPlugin(ScrollTrigger);
     function headerAnime(){
         gsap.fromTo(header_section1.current,{
             x: -100,
@@ -101,8 +106,64 @@ const Home=()=>{
             delay:0,
             opacity:0.7
         })
+
+       
     }
-   
+    
+
+            
+            // let sections = gsap.utils.toArray(".panel");
+            
+            // const tl =gsap.timeline({
+            //     scrollTrigger: {
+            //         trigger: ".section_3",
+            //         toggleActions: "restart pause pause reverse",
+            //         anticipatePin: 1,
+            //         // speed: 0.5,
+            //         start: "top top",
+            //         // endTrigger:".section_3",
+                    
+                    
+            //         // markers:true,
+            //         pin: true,
+                     
+            //         // pinSpacing: false, 
+            //         scrub: 1,
+            //         // snap: 1 / (sections.length - 1),
+            //         // base vertical scrolling on how wide the container is so it feels more natural.
+                    
+            //         end: 'bottom bottom',
+            //         // end: () => "+=" + document.querySelector('.section_3').offsetWidth,
+            //     }
+
+            // })
+
+            // tl.to('.section_3_content_holder', {
+            // xPercent: -100,
+            // ease: "none",
+            // duration:3,
+            
+            // });
+
+            // tl.to('.section_3_content_holder', {
+            //     xPercent: -200,
+            //     ease: "none",
+            //     duration:3,
+                
+            //     });
+            // tl.to('.panel2', {
+            //     xPercent: -200,
+            //     ease: "none",
+            //     duration:1,
+                
+            //     });
+            //     tl.to('.panel3', {
+            //         xPercent: -300,
+            //         ease: "none",
+            //         duration:1,
+                    
+            //         });
+            
     
     
 
@@ -118,15 +179,11 @@ const Home=()=>{
             
         }
 
-    // LOAD ALL POSTS
-            // function soundrimage(){
-            //     // setImage(music_img)
-                
-            // }
 
             useEffect(()=>{
                 getAllPosts(); 
                 headerAnime()
+                
                 // console.log(this)
             },[])
         
@@ -580,7 +637,41 @@ const Home=()=>{
             </section>
 
             <section className="section_3">
-                <p >Hello</p>
+                
+                 
+                <div className="section_3-overlay">
+
+
+                <p>Available For Download on all IOS and Android Devices For Free.</p>
+
+                        <div className="section_3_content_holder panel panel1">
+                                <div className="section_3_content">
+
+                                    <img src={footer_img1}></img>
+                                </div>
+
+
+                                <div className="section_3_content">
+                                    <img src={footer_img2}></img>
+                                </div>
+
+                        </div>
+
+
+                        {/* <div className="section_3_content_holder panel panel2">
+                            <p >Hello2</p>
+                        </div>
+
+
+                        <div className="section_3_content_holder panel panel3">
+                            <p >Hello3</p>
+                            
+                        </div> */}
+                </div>
+                   
+
+
+                
 
             </section>
 

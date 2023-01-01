@@ -1,6 +1,7 @@
 import React,{component} from "react";
 import { Menu } from "./home";
 import { Button } from "@mui/material";
+import logo from '../css/logo.png'
 import { faBolt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
@@ -33,7 +34,7 @@ export const Navbar=()=>{
         <div className="nav" id="navbar">
 
                 <div className="logo">
-                    <p>Soundr</p>
+                    <img src={logo}></img>
                 </div>
             
                 <label id="toggle" for='check' onClick={toggle}></label>

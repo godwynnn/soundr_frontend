@@ -1,4 +1,5 @@
-import React,{Component,useState,useEffect,useRef} from "react";
+import React,{Component,useState,useEffect,useRef, useContext} from "react";
+import {Routes,Route} from "react-router-dom"
 import user_img from '../1.jpeg';
 import music_img from '../2.jpg';
 import burna_img from '../images/burna.jpg'
@@ -13,7 +14,7 @@ import download2 from '../css/download2.png'
 import music from '../Victony.mp3';
 import { Button } from "@mui/material";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlay,faPause,faForward,faBackward,faBolt } from '@fortawesome/free-solid-svg-icons';
+import { faPlay,faPause,faForward,faBackward,faBolt,faEllipsisVertical,faDownload,faBookmark } from '@fortawesome/free-solid-svg-icons';
 import WaveSurfer from 'wavesurfer.js';
 // import AudioPlayer from 'react-modern-audio-player';
 
@@ -38,37 +39,27 @@ import "swiper/css/navigation";
 import { EffectFlip, Pagination, Navigation,EffectCoverflow,Autoplay } from "swiper";
 
 import { ScrollTrigger,gsap } from "gsap/all";
+import { Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+
 // import Lettering from "./lettering";
 
 // import '../css/index.css'
 
 
-// import MyCustomPlugin from 'my-custom-plugin-path';
+export const searchContext=React.createContext()
 
-
-
-
-// const WaveFormOptions=ref=>({
-//     barWidth: 3,
-//     cursorWidth: 1,
-//     container: ref,
-//     // backend: 'WebAudio',
-//     height: 80,
-//     progressColor: '#2D5BFF',
-//     responsive: true,
-//     waveColor: '#EFEFEF',
-//     cursorColor: 'transparent',
-// });
 
 
 
 const Home=()=>{
 
+    const navigate=useNavigate()
     const audio=document.querySelector('#audio')
     const music_container=document.querySelector('#music_container')
     const currently_playing=document.getElementById('audio')
     
-
+    const{searchedPost,searched,setSearchInput,setSearched}=useContext(searchContext)
     const [image, setImage]=useState('')
     const[music_id,setMusicId]=useState(null)
     const [posts, setPosts]=useState([])
@@ -80,6 +71,7 @@ const Home=()=>{
     const[music,setMusic]=useState('')
     const[audioUrl,setAudioUrl]=useState('')
     const footer_audio=useRef(null)
+    
 
     const song_id=document.getElementById(music_id)
 
@@ -170,21 +162,32 @@ const Home=()=>{
                     
             //         })
 
-        function getAllPosts(){
-            fetch(`http://127.0.0.1:8000/`)
+         async function  getAllPosts(){
+            
+             await fetch(`http://127.0.0.1:8000/`)
             .then(response=>response.json())
             .then(data=>{
                 console.log(data.music)
+                localStorage.setItem('searchvalue','')
                 setPosts(data.music)
                 setPlaying(false)
+                setSearched(false)
+                
+               
             })
+           
+            
+            
+            
             
         }
 
 
             useEffect(()=>{
+                
                 getAllPosts(); 
                 headerAnime()
+                
                 
                 // console.log(this)
             },[])
@@ -346,389 +349,428 @@ const Home=()=>{
                 audio.currentTime=duration*(e.target.value/100)
             }
 
+            const RunDownload=async (e)=>{
+                e.preventDefault()
+                fetch(`http://127.0.0.1:8000/download?id=${e.target.id}`)
+                .then(res=>res.json()).then(data=>console.log(data))
 
-        // MUSIC INFO
-        // const music_image= document.querySelector("#music_image")
+            }
+
+            // console.log(searchedPost)
+            console.log(searched)
 
 
+            
         
 
-    return(
-        
-<body>
-            
-            
-            <Navbar/>
-    <main className="landing">
+        return(
+              
+                <body>
+                            
+                       
+                            <Navbar/>
 
-
+            {searched?
+                    <Search/>
+                
+        :
+            <main className="landing">
+            
+                
+                
+            
+                
+                    
+                
         <div className="header">
-            <div className="header_section1" ref={header_section1}>
+                <div className="header_section1" ref={header_section1}>
 
-                <div className="header_caption">
-                    <p>
-                        <span>Discover.</span>Listen.Share
-                    </p><br/><br/>
+                    <div className="header_caption">
+                        <p>
+                            <span>Discover.</span>Listen.Share
+                        </p><br/><br/>
 
-                    {/* <Lettering className="fancyText" tagName="p" charClass="custom"> */}
-                            <p>
-                            Personalized music streaming service, built with the intention of giving you a seamless music experience.
-                            </p>
-                    {/* </Lettering> */}
-                    <br/>
-                    <Button variant="outlined">Explore</Button>
+                        {/* <Lettering className="fancyText" tagName="p" charClass="custom"> */}
+                                <p>
+                                Personalized music streaming service, built with the intention of giving you a seamless music experience.
+                                </p>
+                        {/* </Lettering> */}
+                        <br/>
+                        <Button variant="outlined">Explore</Button>
+
+                    </div>
 
                 </div>
+
+
+
+                <div className="header_section2" ref={header_section2}>
+
+                        <div className="header_img">
+
+                            </div>
+
+                </div>
+
+
 
             </div>
 
 
 
-            <div className="header_section2" ref={header_section2}>
 
-                    <div className="header_img">
+                <section className="section_1">
+                    <div className="section_caption">
+                    <p><FontAwesomeIcon  icon={faBolt} /> New Release</p>
+                    </div>
+                    {posts.map((post,i)=>(
+
+                        <div className="music_holder" key={i}  >
+
+
+                                <div className={"music_container" } >
+                                
+                                                
+                                    <img  className={"music_image "}
+
+                                    // id={post.id}
+                                    // onClick={(e)=>{setAudioSrc(e)}} 
+                                    src={'http://127.0.0.1:8000'+post.image} key={i}></img>
+
+                                
+
+
+                                    {/* <button >
+                                        <FontAwesomeIcon icon={post.id == music_id?icon:faPlay} 
+                                        // onClick={(e)=> ''} 
+                                        id="playBtn"  />
+                                    </button> */}
+
+
+
+                                    <div className={"music_overlay "+ (post.id == music_id && playing?'playing':'')} 
+                                    id={post.id}
+                                
+                                    onClick={e=>{setAudioSrc(e)
+                                    setNext(false)
+                                    setCount(i)
+                                    }}
+                                    ></div>
+
+
+                                    </div>
+
+                                <div className="caption_holder">
+                                    <div className="capt_hold">
+                                        <p className="caption">{post.title}</p>
+                                    </div>
+
+                                    <div class="dropdown caption_menu">
+                                        <button class="dropbtn caption_menu_btn"><FontAwesomeIcon  icon={faEllipsisVertical} /></button>
+                                            <div class="dropdown-content">
+                                                <a href={('http://127.0.0.1:8000'+post.audio)} download ><FontAwesomeIcon  icon={faDownload} /> Download</a>
+                                                <a href="#"> <FontAwesomeIcon  icon={faBookmark} /> Favourite</a>
+                                            
+                                            </div>
+                                    </div>
+                                                                        
+                                </div>
+                                
+                            
+                                
+                            
+                            </div>
+                                
+                                
+                                )
+                                
+                            )}
+                            
+                            {/* <Button   variant="contained" className="auth_btn">All  artiste</Button > */}
+                            
+                        {/* <audio src={music.audio} id="audio" onTimeUpdate={e=>UpdateProgress(e)} /> */}
+                        
+                </section>
+            
+                <section className="featured">
+                    <div className="feature_holder">
+
+                        
+
+                    </div>
+
+                    
+                    <div className="feature_holder">
+
+                        <div className="feature_content">
+
+                            <p>Enjoy More Songs | Listen To Awesome Music | Free and Ad-Supported</p>
+                            <p>You can enjoy a seamless music experience with our free ad-supported service and variety of in-app purchases</p>
 
                         </div>
 
-            </div>
+                        <div className="feature_content">
+
+                            <p>Unlimited music | New songs every day | Explore and download with soundr</p>
+                            <p>Customize your own music playlists from millions of songs and enjoy it anywhere.</p>
+
+                        </div>
+
+
+                        <div className="feature_content">
+
+                            <p>Free and Free | The Best Music in One Place | Search, play and download</p>
+                            <p>soundr is a free, ad-supported music service with in-app purchases that lets you control every aspect of your music. Listen to the songs you want and enjoy a seamless experience.</p>
+
+                        </div>
+
+
+                    </div>
+
+                </section>
+
+
+                <section className="section_2">
+                    <p>Artiste</p><br/>
+                <div className="swipe-section">
+                            <Swiper
+                            effect={"coverflow"}
+                            grabCursor={true}
+                            centeredSlides={true}
+                            slidesPerView={2}
+                            loop={true}
+                            autoplay={{
+                                delay: 2500,
+                                disableOnInteraction: false,
+                            }}
+                            data-swiper-parallax={-300}
+                            data-swiper-parallax-opacity={0}
+                            coverflowEffect={{
+                            rotate: 50,
+                            stretch: 0,
+                            depth: 100,
+                            modifier: 1,
+                            slideShadows: true,
+                            
+                            
+                            }}
+
+                            // pagination={true}
+                            modules={[EffectCoverflow, Pagination,Autoplay]}
+                            className="mySwiper"
+                        >
+                            
+                            <SwiperSlide>
+                            
+                            <div className="swiper_img_holder" >
+                                <a href="#">
+                                    <p  className="swiper_img_caption">Burna Boy</p>
+                                </a>
+                                <img src={burna_img} />
+                                    
+                            </div>
+                            
+                            
+                            </SwiperSlide>
+                            
+
+
+                            <SwiperSlide>
+                            
+                            <div className="swiper_img_holder" >
+                                <a href="#">
+                                    <p  className="swiper_img_caption">Burna Boy</p>
+                                </a>
+                                <img src={burna_img} />
+                                    
+                            </div>
+                            
+                            
+                            </SwiperSlide>
+
+
+                            <SwiperSlide>
+                            
+                            <div className="swiper_img_holder" >
+                                <a href="#">
+                                    <p  className="swiper_img_caption">Burna Boy</p>
+                                </a>
+                                <img src={burna_img} />
+                                    
+                            </div>
+                            
+                            
+                            </SwiperSlide>
+
+
+                        <SwiperSlide>
+                            
+                            <div className="swiper_img_holder" >
+                                <a href="#">
+                                    <p  className="swiper_img_caption">Burna Boy</p>
+                                </a>
+                                <img src={burna_img} />
+                                    
+                            </div>
+                            
+                            
+                            </SwiperSlide>
+
+
+                            <SwiperSlide>
+                            
+                            <div className="swiper_img_holder" >
+                                <a href="#">
+                                    <p  className="swiper_img_caption">Burna Boy</p>
+                                </a>
+                                <img src={burna_img} />
+                                    
+                            </div>
+                            
+                            
+                            </SwiperSlide>
 
 
 
-        </div>
+                        <SwiperSlide>
+                            
+                            <div className="swiper_img_holder" >
+                                <a href="#">
+                                    <p  className="swiper_img_caption">Burna Boy</p>
+                                </a>
+                                <img src={burna_img} />
+                                    
+                            </div>
+                            
+                            
+                            </SwiperSlide>
 
-            
 
-        
-            <section className="section_1">
-                <div className="section_caption">
-                <p><FontAwesomeIcon  icon={faBolt} /> New Release</p>
+                            <SwiperSlide>
+                            
+                            <div className="swiper_img_holder" >
+                                <a href="#">
+                                    <p  className="swiper_img_caption">Burna Boy</p>
+                                </a>
+                                <img src={burna_img} />
+                                    
+                            </div>
+                            
+                            
+                            </SwiperSlide>
+
+
+
+                        <SwiperSlide>
+                            
+                            <div className="swiper_img_holder" >
+                                <a href="#">
+                                    <p  className="swiper_img_caption">Burna Boy</p>
+                                </a>
+                                <img src={burna_img} />
+                                    
+                            </div>
+                            
+                            
+                            </SwiperSlide>
+
+
+
+                        <SwiperSlide>
+                            
+                            <div className="swiper_img_holder" >
+                                <a href="#">
+                                    <p  className="swiper_img_caption">Burna Boy</p>
+                                </a>
+                                <img src={burna_img} />
+                                    
+                            </div>
+                            
+                            
+                            </SwiperSlide>
+
+
+                        </Swiper>
                 </div>
-                {posts.map((post,i)=>(
+                    
+                <Button   variant="contained" className="auth_btn">All  artiste</Button >
+                    </section>
 
-                    <div className="music_holder" key={i}  >
-
-
-                            <div className={"music_container" } >
-                            
-                                            
-                                <img  className={"music_image "}
-
-                                // id={post.id}
-                                // onClick={(e)=>{setAudioSrc(e)}} 
-                                src={'http://127.0.0.1:8000'+post.image} key={i}></img>
-
-                            
+                    <section className="section_3">
+                        
+                        
+                        <div className="section_3-overlay">
 
 
-                                {/* <button >
-                                    <FontAwesomeIcon icon={post.id == music_id?icon:faPlay} 
-                                    // onClick={(e)=> ''} 
-                                    id="playBtn"  />
-                                </button> */}
+                        <p>Available For Download on all IOS and Android Devices For Free.</p>
+
+                                <div className="section_3_content_holder panel panel1">
+                                        <div className="section_3_content">
+
+                                            <img src={footer_img1}></img>
+                                            <img src={download2}></img>
+                                        </div>
 
 
-
-                                <div className={"music_overlay "+ (post.id == music_id && playing?'playing':'')} 
-                                id={post.id}
-                            
-                                onClick={e=>{setAudioSrc(e)
-                                setNext(false)
-                                setCount(i)
-                                }}
-                                ></div>
-
+                                        <div className="section_3_content">
+                                            <img src={footer_img2}></img>
+                                            <img src={download1}></img>
+                                        </div>
 
                                 </div>
 
-                            <div className="caption_holder">
-                                <p className="caption">{post.title}</p>
-                            </div>
-                            
-                        
-                            
-                        
+
+                                {/* <div className="section_3_content_holder panel panel2">
+                                    <p >Hello2</p>
+                                </div>
+
+
+                                <div className="section_3_content_holder panel panel3">
+                                    <p >Hello3</p>
+                                    
+                                </div> */}
                         </div>
-                            
-                            
-                            )
-                            
-                        )}
                         
-                        {/* <Button   variant="contained" className="auth_btn">All  artiste</Button > */}
+
+
                         
-                    {/* <audio src={music.audio} id="audio" onTimeUpdate={e=>UpdateProgress(e)} /> */}
-                    
-            </section>
-        
-            <section className="featured">
-                <div className="feature_holder">
 
-                    
+                    </section>
+            
 
-                </div>
+    
+<Footer/>
 
+            </main>
+        }  
                 
-                <div className="feature_holder">
-
-                    <div className="feature_content">
-
-                        <p>Enjoy More Songs | Listen To Awesome Music | Free and Ad-Supported</p>
-                        <p>You can enjoy a seamless music experience with our free ad-supported service and variety of in-app purchases</p>
-
-                    </div>
-
-                    <div className="feature_content">
-
-                        <p>Unlimited music | New songs every day | Explore and download with soundr</p>
-                        <p>Customize your own music playlists from millions of songs and enjoy it anywhere.</p>
-
-                    </div>
-
-
-                    <div className="feature_content">
-
-                        <p>Free and Free | The Best Music in One Place | Search, play and download</p>
-                        <p>soundr is a free, ad-supported music service with in-app purchases that lets you control every aspect of your music. Listen to the songs you want and enjoy a seamless experience.</p>
-
-                    </div>
-
-
-                </div>
-
-            </section>
-
-
-            <section className="section_2">
-                <p>Artiste</p><br/>
-            <div className="swipe-section">
-                        <Swiper
-                        effect={"coverflow"}
-                        grabCursor={true}
-                        centeredSlides={true}
-                        slidesPerView={2}
-                        loop={true}
-                        autoplay={{
-                            delay: 2500,
-                            disableOnInteraction: false,
-                        }}
-                        data-swiper-parallax={-300}
-                        data-swiper-parallax-opacity={0}
-                        coverflowEffect={{
-                        rotate: 50,
-                        stretch: 0,
-                        depth: 100,
-                        modifier: 1,
-                        slideShadows: true,
-                        
-                        
-                        }}
-
-                        // pagination={true}
-                        modules={[EffectCoverflow, Pagination,Autoplay]}
-                        className="mySwiper"
-                    >
-                        
-                        <SwiperSlide>
-                        
-                        <div className="swiper_img_holder" >
-                            <a href="#">
-                                <p  className="swiper_img_caption">Burna Boy</p>
-                            </a>
-                            <img src={burna_img} />
-                                
-                        </div>
-                        
-                        
-                        </SwiperSlide>
-                        
-
-
-                        <SwiperSlide>
-                        
-                        <div className="swiper_img_holder" >
-                            <a href="#">
-                                <p  className="swiper_img_caption">Burna Boy</p>
-                            </a>
-                            <img src={burna_img} />
-                                
-                        </div>
-                        
-                        
-                        </SwiperSlide>
-
-
-                        <SwiperSlide>
-                        
-                        <div className="swiper_img_holder" >
-                            <a href="#">
-                                <p  className="swiper_img_caption">Burna Boy</p>
-                            </a>
-                            <img src={burna_img} />
-                                
-                        </div>
-                        
-                        
-                        </SwiperSlide>
-
-
-                    <SwiperSlide>
-                        
-                        <div className="swiper_img_holder" >
-                            <a href="#">
-                                <p  className="swiper_img_caption">Burna Boy</p>
-                            </a>
-                            <img src={burna_img} />
-                                
-                        </div>
-                        
-                        
-                        </SwiperSlide>
-
-
-                        <SwiperSlide>
-                        
-                        <div className="swiper_img_holder" >
-                            <a href="#">
-                                <p  className="swiper_img_caption">Burna Boy</p>
-                            </a>
-                            <img src={burna_img} />
-                                
-                        </div>
-                        
-                        
-                        </SwiperSlide>
-
-
-
-                    <SwiperSlide>
-                        
-                        <div className="swiper_img_holder" >
-                            <a href="#">
-                                <p  className="swiper_img_caption">Burna Boy</p>
-                            </a>
-                            <img src={burna_img} />
-                                
-                        </div>
-                        
-                        
-                        </SwiperSlide>
-
-
-                        <SwiperSlide>
-                        
-                        <div className="swiper_img_holder" >
-                            <a href="#">
-                                <p  className="swiper_img_caption">Burna Boy</p>
-                            </a>
-                            <img src={burna_img} />
-                                
-                        </div>
-                        
-                        
-                        </SwiperSlide>
-
-
-
-                    <SwiperSlide>
-                        
-                        <div className="swiper_img_holder" >
-                            <a href="#">
-                                <p  className="swiper_img_caption">Burna Boy</p>
-                            </a>
-                            <img src={burna_img} />
-                                
-                        </div>
-                        
-                        
-                        </SwiperSlide>
-
-
-
-                    <SwiperSlide>
-                        
-                        <div className="swiper_img_holder" >
-                            <a href="#">
-                                <p  className="swiper_img_caption">Burna Boy</p>
-                            </a>
-                            <img src={burna_img} />
-                                
-                        </div>
-                        
-                        
-                        </SwiperSlide>
-
-
-                    </Swiper>
-            </div>
-                
-            <Button   variant="contained" className="auth_btn">All  artiste</Button >
-                </section>
-
-                <section className="section_3">
-                    
-                    
-                    <div className="section_3-overlay">
-
-
-                    <p>Available For Download on all IOS and Android Devices For Free.</p>
-
-                            <div className="section_3_content_holder panel panel1">
-                                    <div className="section_3_content">
-
-                                        <img src={footer_img1}></img>
-                                        <img src={download2}></img>
-                                    </div>
-
-
-                                    <div className="section_3_content">
-                                        <img src={footer_img2}></img>
-                                        <img src={download1}></img>
-                                    </div>
-
-                            </div>
-
-
-                            {/* <div className="section_3_content_holder panel panel2">
-                                <p >Hello2</p>
-                            </div>
-
-
-                            <div className="section_3_content_holder panel panel3">
-                                <p >Hello3</p>
-                                
-                            </div> */}
-                    </div>
-                    
 
 
                     
+                            <Play image={image} 
+                                playing={playing}
+                                footerplaying={footerplaying} 
+                                playpause={(e)=>playPause(e)}
+                                playicon={icon} 
+                                progress={progress} 
+                                setProgress={e=>setProgress(e)}
+                                music={music}
+                                next={NextSong}
+                                prev={PrevSong}
+                                play={playSong}
+                                pause={pauseSong}
+                                audio={footer_audio}
+                                update={(e)=>UpdateProgress(e)}
+                                
+                                />
+                          
 
-                </section>
+                        
+                        
 
-            <Footer/>
-    </main>
-            <Play image={image} 
-                playing={playing}
-                footerplaying={footerplaying} 
-                playpause={(e)=>playPause(e)}
-                playicon={icon} 
-                progress={progress} 
-                setProgress={e=>setProgress(e)}
-                music={music}
-                next={NextSong}
-                prev={PrevSong}
-                play={playSong}
-                pause={pauseSong}
-                audio={footer_audio}
-                update={(e)=>UpdateProgress(e)}
-                 
-                 />
-
-        
+                </body>
            
-
-        </body>
-    )
+        )
 }
 
 export default Home
@@ -770,6 +812,117 @@ export const Menu=()=>{
     )
 }
 
+
+
+
+
+
+
+export const Search=(props)=>{
+
+    const{searchedPost,searchInput,searched,setSearched}=useContext(searchContext)
+    console.log(searchedPost)
+    // useEffect(()=>{
+    //     setSearched(true)
+    // })
+        
+
+    return(
+        
+
+               
+                <body>
+                            
+                       
+                        <Navbar/>
+
+                   
+                <main className="landing">
+            
+            
+       
+            <section className="section_1">
+        
+                {searchedPost.map((post,i)=>(
+
+                <div className="music_holder" key={i}  >
+
+
+                        <div className={"music_container" } >
+                        
+                                        
+                            <img  className={"music_image "}
+
+                            // id={post.id}
+                            // onClick={(e)=>{setAudioSrc(e)}} 
+                            src={'http://127.0.0.1:8000'+post.image} key={i}></img>
+
+                        
+
+
+                            {/* <button >
+                                <FontAwesomeIcon icon={post.id == music_id?icon:faPlay} 
+                                // onClick={(e)=> ''} 
+                                id="playBtn"  />
+                            </button> */}
+
+
+
+                            <div className={"music_overlay " + (post.id == props.music_id && props.playing?'playing':'')} 
+                            id={post.id}
+                        
+                            // onClick={e=>{setAudioSrc(e)
+                            // setNext(false)
+                            // setCount(i)
+                            // }}
+                            ></div>
+
+
+                            </div>
+
+                        <div className="caption_holder">
+                            <div className="capt_hold">
+                                <p className="caption">{post.title}</p>
+                            </div>
+
+                            <div class="dropdown caption_menu">
+                                <button class="dropbtn caption_menu_btn"><FontAwesomeIcon  icon={faEllipsisVertical} /></button>
+                                    <div class="dropdown-content">
+                                        <a href={('http://127.0.0.1:8000'+post.audio)} download ><FontAwesomeIcon  icon={faDownload} /> Download</a>
+                                        <a href="#"> <FontAwesomeIcon  icon={faBookmark} /> Favourite</a>
+                                    
+                                    </div>
+                            </div>
+                                                                
+                        </div>
+                        
+                    
+                        
+                    
+                    </div>
+                        
+                        
+                        )
+                        
+                    )}
+                    
+            </section>
+
+                </main>
+
+
+
+        </body>
+
+
+
+    
+            
+       
+            
+       
+    )
+}
 
 
 

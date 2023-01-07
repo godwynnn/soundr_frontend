@@ -41,18 +41,20 @@ export const Navbar=()=>{
                             setSearched(true)
                             navigate(`/search=${searchInput}`)
                             
+                            
                             // console.log(data)
                         })
 
                     }
-                        
-                    
-                    
-                    
+  
                     
                 }
-                
 
+                // window.onload=function(){
+                    
+                    
+                // }
+                
                 useEffect(()=>{
                     
                     console.log(searchInput)
@@ -62,16 +64,13 @@ export const Navbar=()=>{
                         fetch(`http://127.0.0.1:8000/search?q=${localStorage.getItem('searchvalue')}`)
                         .then(res=>res.json()).then(data=>{
                             setSearchedPost(data.music)
-                            setSearched(true)
+                            // setSearched(true)
                             // navigate(`/search/${localStorage.getItem('searchvalue')}`)
                             
                             // console.log(data)
                         })
-                       
-                    }
-                    
-
-
+                   
+                }
                     
                 },[])
 

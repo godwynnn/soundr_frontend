@@ -33,6 +33,30 @@ export const Play=(props)=>{
     function removeVolume(){
         document.querySelector('#volume_holder').classList.remove('active')
     }
+
+    // useEffect(()=>{
+    //     if (localStorage.getItem('music_data') != ''){
+    //                 props.set_music(JSON.parse(localStorage.getItem('music_data')))
+    //         }  
+    // },[])
+
+    // WINDOW RELOAD EVENT
+            window.onload=function(){
+
+                
+                    localStorage.setItem('footer_playing',false)
+                    localStorage.setItem('playing',false)
+                    // localStorage.setItem('music_data','')
+                    // props.set_music([])
+                    props.setFooterPlaying(false)
+                
+                
+                
+                
+                
+            }
+
+    
     
 
     

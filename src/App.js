@@ -5,6 +5,7 @@ import { Search } from "./context/home";
 
 import { searchContext } from "./context/home";
 import { useNavigate, useParams } from "react-router-dom";
+import { Detail } from "./context/detail";
 
 
 
@@ -18,19 +19,14 @@ function App() {
 
   return (
     <searchContext.Provider value={{searchInput,setSearchInput,setSearchedPost,searchedPost,setSearched,searched}} > 
-    <Routes>
+    {/* <Routes>
 
       <Route path="/search=:query" element={<Search/>}/>
-     
       <Route path="/"  element={<Home/>} />
+      <Route path="/:id"  element={<Detail/>} />
 
-      
-        
-      
-      
-      
-
-    </Routes>
+    </Routes> */}
+    <Home/>
     </searchContext.Provider>
   );
 }

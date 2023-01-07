@@ -26,6 +26,7 @@ import { Play } from "./footerPlay";
 // import 'react-h5-audio-player/lib/styles.css';
 import { Navbar } from "./nav";
 import { Footer } from "./footer";
+import { Index } from "./index";
 
 // import Button from 'react-bootstrap/Button';
 
@@ -41,6 +42,7 @@ import { EffectFlip, Pagination, Navigation,EffectCoverflow,Autoplay } from "swi
 import { ScrollTrigger,gsap } from "gsap/all";
 import { Link } from "react-router-dom";
 import { useNavigate, useParams } from "react-router-dom";
+import { Detail } from "./detail";
 
 // import Lettering from "./lettering";
 
@@ -71,6 +73,8 @@ const Home=()=>{
     const[music,setMusic]=useState('')
     const[audioUrl,setAudioUrl]=useState('')
     const footer_audio=useRef(null)
+
+    const param=useParams()
     
 
     const song_id=document.getElementById(music_id)
@@ -168,10 +172,11 @@ const Home=()=>{
             .then(response=>response.json())
             .then(data=>{
                 console.log(data.music)
-                localStorage.setItem('searchvalue','')
+                // localStorage.setItem('searchvalue','')
                 setPosts(data.music)
                 setPlaying(false)
-                setSearched(false)
+                
+                
                 
                
             })
@@ -180,18 +185,38 @@ const Home=()=>{
             
             
             
-        }
+        };
+
+            // WINDOW RELOAD EVENT
+            window.onload=function(){
+                
+                localStorage.setItem('footer_playing',false)
+                localStorage.setItem('playing',false)
+                localStorage.removeItem('music_data')
+                // setSearched(true)
+                
+                
+                
+            }
+
 
 
             useEffect(()=>{
                 
+                setSearched(false)
                 getAllPosts(); 
                 headerAnime()
                 
                 
+                
+                
                 // console.log(this)
             },[])
-        
+            
+            
+                
+                
+          
 
 
     // LOAD AND CONTROL MUSIC
@@ -202,6 +227,8 @@ const Home=()=>{
                     setIcon(faPause)
                     setFooterPlaying(true)
                     setPlaying(true)
+                    localStorage.setItem('playing',true)
+                    localStorage.setItem('footer_playing',true)
                     footer_audio.current.audio.current.play()
                     // footer_audio.current.play()
                     // const audio_played=e.target.nextSibling
@@ -223,6 +250,8 @@ const Home=()=>{
                     setIcon(faPlay)
                     setFooterPlaying(true)
                     setPlaying(false)
+                    localStorage.setItem('playing',false)
+                    localStorage.setItem('footer_playing',true)
                     footer_audio.current.audio.current.pause()
                     // console.log(audio)
                     // console.log(e.target.nextSibling)
@@ -249,12 +278,13 @@ const Home=()=>{
 
             // console.log(e)
             setMusicId(e.target.id)
-            await fetch(`http://127.0.0.1:8000/${e.target.id}/`).then(
+            await fetch(`http://127.0.0.1:8000/${e.target.id}/play`).then(
                 response=>response.json()
                 ).then( data=>{
                 console.log(data)
                   
                  setMusic( data)
+                 localStorage.setItem('music_data',JSON.stringify(data))
             
                 console.log(music_id)
                 
@@ -278,7 +308,7 @@ const Home=()=>{
                         setCount(count)
                         
                     
-                        let url=`http://127.0.0.1:8000/${posts[count].id}/`
+                        let url=`http://127.0.0.1:8000/${posts[count].id}/play`
                         // posts[count].id
                         setMusicId(posts[count].id)
                         setPlaying(true)
@@ -305,7 +335,7 @@ const Home=()=>{
                         }
                         setNext(true)
                         setCount(count)
-                        let url=`http://127.0.0.1:8000/${posts[count].id}/`
+                        let url=`http://127.0.0.1:8000/${posts[count].id}/play`
                         // e=posts[count].id
                         setMusicId(posts[count].id)
                         setPlaying(true)
@@ -365,384 +395,31 @@ const Home=()=>{
 
         return(
               
-                <body>
+            <body>
                             
                        
                             <Navbar/>
+            <Routes>
 
-            {searched?
-                    <Search/>
-                
-        :
-            <main className="landing">
             
-                
-                
+                    <Route path="/search=:query"  element={<Search searchedposts={searchedPost}/>}></Route>  
+
+                    <Route path="/" element={<Index 
+                        posts={posts}
+                        music_id={music_id}
+                        playing={playing}
+                        setAudioSrc={(e)=>setAudioSrc(e)}
+                        setNext={setNext}
+                        setCount={setCount}
+                        ref1={header_section1}
+                            // ref2={header_section2}
+                    />}></Route>
+
+                    <Route path="/:id"  element={<Detail/>} />
+
+            </Routes>  
             
-                
-                    
-                
-        <div className="header">
-                <div className="header_section1" ref={header_section1}>
-
-                    <div className="header_caption">
-                        <p>
-                            <span>Discover.</span>Listen.Share
-                        </p><br/><br/>
-
-                        {/* <Lettering className="fancyText" tagName="p" charClass="custom"> */}
-                                <p>
-                                Personalized music streaming service, built with the intention of giving you a seamless music experience.
-                                </p>
-                        {/* </Lettering> */}
-                        <br/>
-                        <Button variant="outlined">Explore</Button>
-
-                    </div>
-
-                </div>
-
-
-
-                <div className="header_section2" ref={header_section2}>
-
-                        <div className="header_img">
-
-                            </div>
-
-                </div>
-
-
-
-            </div>
-
-
-
-
-                <section className="section_1">
-                    <div className="section_caption">
-                    <p><FontAwesomeIcon  icon={faBolt} /> New Release</p>
-                    </div>
-                    {posts.map((post,i)=>(
-
-                        <div className="music_holder" key={i}  >
-
-
-                                <div className={"music_container" } >
-                                
-                                                
-                                    <img  className={"music_image "}
-
-                                    // id={post.id}
-                                    // onClick={(e)=>{setAudioSrc(e)}} 
-                                    src={'http://127.0.0.1:8000'+post.image} key={i}></img>
-
-                                
-
-
-                                    {/* <button >
-                                        <FontAwesomeIcon icon={post.id == music_id?icon:faPlay} 
-                                        // onClick={(e)=> ''} 
-                                        id="playBtn"  />
-                                    </button> */}
-
-
-
-                                    <div className={"music_overlay "+ (post.id == music_id && playing?'playing':'')} 
-                                    id={post.id}
-                                
-                                    onClick={e=>{setAudioSrc(e)
-                                    setNext(false)
-                                    setCount(i)
-                                    }}
-                                    ></div>
-
-
-                                    </div>
-
-                                <div className="caption_holder">
-                                    <div className="capt_hold">
-                                        <p className="caption">{post.title}</p>
-                                    </div>
-
-                                    <div class="dropdown caption_menu">
-                                        <button class="dropbtn caption_menu_btn"><FontAwesomeIcon  icon={faEllipsisVertical} /></button>
-                                            <div class="dropdown-content">
-                                                <a href={('http://127.0.0.1:8000'+post.audio)} download ><FontAwesomeIcon  icon={faDownload} /> Download</a>
-                                                <a href="#"> <FontAwesomeIcon  icon={faBookmark} /> Favourite</a>
-                                            
-                                            </div>
-                                    </div>
-                                                                        
-                                </div>
-                                
-                            
-                                
-                            
-                            </div>
-                                
-                                
-                                )
-                                
-                            )}
-                            
-                            {/* <Button   variant="contained" className="auth_btn">All  artiste</Button > */}
-                            
-                        {/* <audio src={music.audio} id="audio" onTimeUpdate={e=>UpdateProgress(e)} /> */}
-                        
-                </section>
             
-                <section className="featured">
-                    <div className="feature_holder">
-
-                        
-
-                    </div>
-
-                    
-                    <div className="feature_holder">
-
-                        <div className="feature_content">
-
-                            <p>Enjoy More Songs | Listen To Awesome Music | Free and Ad-Supported</p>
-                            <p>You can enjoy a seamless music experience with our free ad-supported service and variety of in-app purchases</p>
-
-                        </div>
-
-                        <div className="feature_content">
-
-                            <p>Unlimited music | New songs every day | Explore and download with soundr</p>
-                            <p>Customize your own music playlists from millions of songs and enjoy it anywhere.</p>
-
-                        </div>
-
-
-                        <div className="feature_content">
-
-                            <p>Free and Free | The Best Music in One Place | Search, play and download</p>
-                            <p>soundr is a free, ad-supported music service with in-app purchases that lets you control every aspect of your music. Listen to the songs you want and enjoy a seamless experience.</p>
-
-                        </div>
-
-
-                    </div>
-
-                </section>
-
-
-                <section className="section_2">
-                    <p>Artiste</p><br/>
-                <div className="swipe-section">
-                            <Swiper
-                            effect={"coverflow"}
-                            grabCursor={true}
-                            centeredSlides={true}
-                            slidesPerView={2}
-                            loop={true}
-                            autoplay={{
-                                delay: 2500,
-                                disableOnInteraction: false,
-                            }}
-                            data-swiper-parallax={-300}
-                            data-swiper-parallax-opacity={0}
-                            coverflowEffect={{
-                            rotate: 50,
-                            stretch: 0,
-                            depth: 100,
-                            modifier: 1,
-                            slideShadows: true,
-                            
-                            
-                            }}
-
-                            // pagination={true}
-                            modules={[EffectCoverflow, Pagination,Autoplay]}
-                            className="mySwiper"
-                        >
-                            
-                            <SwiperSlide>
-                            
-                            <div className="swiper_img_holder" >
-                                <a href="#">
-                                    <p  className="swiper_img_caption">Burna Boy</p>
-                                </a>
-                                <img src={burna_img} />
-                                    
-                            </div>
-                            
-                            
-                            </SwiperSlide>
-                            
-
-
-                            <SwiperSlide>
-                            
-                            <div className="swiper_img_holder" >
-                                <a href="#">
-                                    <p  className="swiper_img_caption">Burna Boy</p>
-                                </a>
-                                <img src={burna_img} />
-                                    
-                            </div>
-                            
-                            
-                            </SwiperSlide>
-
-
-                            <SwiperSlide>
-                            
-                            <div className="swiper_img_holder" >
-                                <a href="#">
-                                    <p  className="swiper_img_caption">Burna Boy</p>
-                                </a>
-                                <img src={burna_img} />
-                                    
-                            </div>
-                            
-                            
-                            </SwiperSlide>
-
-
-                        <SwiperSlide>
-                            
-                            <div className="swiper_img_holder" >
-                                <a href="#">
-                                    <p  className="swiper_img_caption">Burna Boy</p>
-                                </a>
-                                <img src={burna_img} />
-                                    
-                            </div>
-                            
-                            
-                            </SwiperSlide>
-
-
-                            <SwiperSlide>
-                            
-                            <div className="swiper_img_holder" >
-                                <a href="#">
-                                    <p  className="swiper_img_caption">Burna Boy</p>
-                                </a>
-                                <img src={burna_img} />
-                                    
-                            </div>
-                            
-                            
-                            </SwiperSlide>
-
-
-
-                        <SwiperSlide>
-                            
-                            <div className="swiper_img_holder" >
-                                <a href="#">
-                                    <p  className="swiper_img_caption">Burna Boy</p>
-                                </a>
-                                <img src={burna_img} />
-                                    
-                            </div>
-                            
-                            
-                            </SwiperSlide>
-
-
-                            <SwiperSlide>
-                            
-                            <div className="swiper_img_holder" >
-                                <a href="#">
-                                    <p  className="swiper_img_caption">Burna Boy</p>
-                                </a>
-                                <img src={burna_img} />
-                                    
-                            </div>
-                            
-                            
-                            </SwiperSlide>
-
-
-
-                        <SwiperSlide>
-                            
-                            <div className="swiper_img_holder" >
-                                <a href="#">
-                                    <p  className="swiper_img_caption">Burna Boy</p>
-                                </a>
-                                <img src={burna_img} />
-                                    
-                            </div>
-                            
-                            
-                            </SwiperSlide>
-
-
-
-                        <SwiperSlide>
-                            
-                            <div className="swiper_img_holder" >
-                                <a href="#">
-                                    <p  className="swiper_img_caption">Burna Boy</p>
-                                </a>
-                                <img src={burna_img} />
-                                    
-                            </div>
-                            
-                            
-                            </SwiperSlide>
-
-
-                        </Swiper>
-                </div>
-                    
-                <Button   variant="contained" className="auth_btn">All  artiste</Button >
-                    </section>
-
-                    <section className="section_3">
-                        
-                        
-                        <div className="section_3-overlay">
-
-
-                        <p>Available For Download on all IOS and Android Devices For Free.</p>
-
-                                <div className="section_3_content_holder panel panel1">
-                                        <div className="section_3_content">
-
-                                            <img src={footer_img1}></img>
-                                            <img src={download2}></img>
-                                        </div>
-
-
-                                        <div className="section_3_content">
-                                            <img src={footer_img2}></img>
-                                            <img src={download1}></img>
-                                        </div>
-
-                                </div>
-
-
-                                {/* <div className="section_3_content_holder panel panel2">
-                                    <p >Hello2</p>
-                                </div>
-
-
-                                <div className="section_3_content_holder panel panel3">
-                                    <p >Hello3</p>
-                                    
-                                </div> */}
-                        </div>
-                        
-
-
-                        
-
-                    </section>
-            
-
-    
-<Footer/>
-
-            </main>
-        }  
                 
 
 
@@ -761,6 +438,8 @@ const Home=()=>{
                                 pause={pauseSong}
                                 audio={footer_audio}
                                 update={(e)=>UpdateProgress(e)}
+                                set_music={setMusic}
+                                setFooterPlaying={setFooterPlaying}
                                 
                                 />
                           
@@ -820,22 +499,50 @@ export const Menu=()=>{
 
 export const Search=(props)=>{
 
-    const{searchedPost,searchInput,searched,setSearched}=useContext(searchContext)
+    const{setSearchedPost,searchedPost,searchInput,searched,setSearched}=useContext(searchContext)
     console.log(searchedPost)
+
+
     // useEffect(()=>{
     //     setSearched(true)
-    // })
+    //     if (localStorage.getItem('searchvalue') != ''){
+    //         // navigate("/")
+    //         fetch(`http://127.0.0.1:8000/search?q=${localStorage.getItem('searchvalue')}`)
+    //         .then(res=>res.json()).then(data=>{
+    //             setSearchedPost(data.music)
+    //             // setSearched(true)
+    //             // navigate(`/search/${localStorage.getItem('searchvalue')}`)
+                
+    //             // console.log(data)
+    //         })
+       
+    // }
+    // },[])
         
+    window.onload=function(){
+        setSearched(true)
+        if (localStorage.getItem('searchvalue') != ''){
+            // navigate("/")
+            fetch(`http://127.0.0.1:8000/search?q=${localStorage.getItem('searchvalue')}`)
+            .then(res=>res.json()).then(data=>{
+                setSearchedPost(data.music)
+                // setSearched(true)
+                // navigate(`/search/${localStorage.getItem('searchvalue')}`)
+                
+                // console.log(data)
+            })
+       
+    }
+    }
 
     return(
         
 
                
-                <body>
+                
                             
                        
-                        <Navbar/>
-
+                        
                    
                 <main className="landing">
             
@@ -911,8 +618,6 @@ export const Search=(props)=>{
                 </main>
 
 
-
-        </body>
 
 
 

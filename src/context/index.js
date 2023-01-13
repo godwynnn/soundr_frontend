@@ -124,76 +124,87 @@ export const Index=React.forwardRef((props,ref1)=>{
                         <div className="section_caption">
                         <p><FontAwesomeIcon  icon={faBolt} /> New Release</p>
                         </div>
-                        {props.posts.map((post,i)=>(
 
-                            <div className="music_holder" key={i}  >
+                        <div className="section_1_holder">
 
+                        
+                                {props.posts.map((post,i)=>(
 
-                                    <div className={"music_container" } >
-                                    
-                                                    
-                                        <img  className={"music_image "}
-
-                                        // id={post.id}
-                                        // onClick={(e)=>{setAudioSrc(e)}} 
-                                        src={'http://127.0.0.1:8000'+post.image} key={i}></img>
-
-                                    
+                                    <div className="music_holder" key={i}  >
 
 
-                                        {/* <button >
-                                            <FontAwesomeIcon icon={post.id == music_id?icon:faPlay} 
-                                            // onClick={(e)=> ''} 
-                                            id="playBtn"  />
-                                        </button> */}
+                                            <div className={"music_container" } >
+                                            
+                                                            
+                                                <img  className={"music_image "}
+
+                                                // id={post.id}
+                                                // onClick={(e)=>{setAudioSrc(e)}} 
+                                                src={'http://127.0.0.1:8000'+post.image} key={i}></img>
+
+                                            
+
+
+                                                {/* <button >
+                                                    <FontAwesomeIcon icon={post.id == music_id?icon:faPlay} 
+                                                    // onClick={(e)=> ''} 
+                                                    id="playBtn"  />
+                                                </button> */}
 
 
 
-                                        <div className={"music_overlay "+ (post.id == props.music_id && props.playing?'playing':'')} 
-                                        id={post.id}
-                                    
-                                        onClick={(e)=>{props.setAudioSrc(e)
-                                        props.setNext(false)
-                                        props.setCount(i)
-                                        }}
-                                        ></div>
+                                                <div className={"music_overlay "+ (post.id == props.music_id && props.playing?'playing':'')} 
+                                                id={post.id}
+                                            
+                                                onClick={(e)=>{props.setAudioSrc(e)
+                                                props.setNext(false)
+                                                props.setCount(i)
+                                                }}
+                                                ></div>
 
 
-                                        </div>
-                                
-                            <Link to={`/${post.slug}`}  >
-                            
-                                    <div className="caption_holder">
-                                        <div className="capt_hold">
-                                            <p className="caption">{post.title}</p>
-                                        </div>
-
-                                        <div class="dropdown caption_menu">
-                                            <button class="dropbtn caption_menu_btn"><FontAwesomeIcon  icon={faEllipsisVertical} /></button>
-                                                <div class="dropdown-content">
-                                                    <a href={('http://127.0.0.1:8000'+post.audio)} download ><FontAwesomeIcon  icon={faDownload} /> Download</a>
-                                                    <a href="#"> <FontAwesomeIcon  icon={faBookmark} /> Favourite</a>
-                                                
                                                 </div>
+                                        
+                                    <Link to={`/${post.slug}`}  >
+                                    
+                                            <div className="caption_holder">
+                                                <div className="capt_hold">
+                                                    <p className="caption">{post.title}</p>
+                                                </div>
+
+                                                <div class="dropdown caption_menu">
+                                                    <button class="dropbtn caption_menu_btn"><FontAwesomeIcon  icon={faEllipsisVertical} /></button>
+                                                        <div class="dropdown-content">
+                                                            <a href={('http://127.0.0.1:8000'+post.audio)} download ><FontAwesomeIcon  icon={faDownload} /> Download</a>
+                                                            <a href="#"> <FontAwesomeIcon  icon={faBookmark} /> Favourite</a>
+                                                        
+                                                        </div>
+                                                </div>
+                                                                                    
+                                            </div>
+                                            
+                                        </Link>
+                                            
+                                        
                                         </div>
-                                                                            
-                                    </div>
-                                    
-                                </Link>
-                                    
+                                            
+                                            
+                                            )
+                                            
+                                        )}
                                 
-                                </div>
-                                    
-                                    
-                                    )
-                                    
-                                )}
+                            </div><br />
                                 
-                                {/* <Button   variant="contained" className="auth_btn">All  artiste</Button > */}
-                                
+                            <br /><br /><br />
                             {/* <audio src={music.audio} id="audio" onTimeUpdate={e=>UpdateProgress(e)} /> */}
-                            
+                            <Link to='/recent'>
+                            <Button   variant="contained" className="more_songs_btn" >More Songs</Button >
+                            </Link>
                     </section>
+
+                    
+
+                    
                 
                     <section className="featured">
                         <div className="feature_holder">

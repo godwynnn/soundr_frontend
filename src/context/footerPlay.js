@@ -22,23 +22,36 @@ export const Play=(props)=>{
 
     // console.log(props.progress)
    
-    // const volume_control=document.querySelector('.volume_icon');
-    // const volume_holder=document.querySelector('#volume_holder')
-    // volume_control.addEventListener('click',()=>{
-        
-    // })
-    function ShowVolume(){
-        document.querySelector('#volume_holder').classList.add('active')
-    }
-    function removeVolume(){
-        document.querySelector('#volume_holder').classList.remove('active')
+    const play_feature=document.querySelector('#play_feature')
+    console.log(play_feature)
+
+
+    function Minimize(){
+        play_feature.classList.add('min')
+
     }
 
-    // useEffect(()=>{
-    //     if (localStorage.getItem('music_data') != ''){
-    //                 props.set_music(JSON.parse(localStorage.getItem('music_data')))
-    //         }  
-    // },[])
+    function Maximize(){
+        if (play_feature.classList.contains('min')){
+            play_feature.classList.remove('min')
+        }
+    }
+
+
+    // function ShowVolume(){
+    //     document.querySelector('#volume_holder').classList.add('active')
+    // }
+    // function removeVolume(){
+    //     document.querySelector('#volume_holder').classList.remove('active')
+    // }
+
+    useEffect(()=>{
+        // if (localStorage.getItem('music_data') != ''){
+        //             props.set_music(JSON.parse(localStorage.getItem('music_data')))
+        //     }  
+        // Minimize();
+        // Maximize()
+    },[])
 
     // WINDOW RELOAD EVENT
             window.onload=function(){
@@ -50,10 +63,7 @@ export const Play=(props)=>{
                     // props.set_music([])
                     props.setFooterPlaying(false)
                 
-                
-                
-                
-                
+
             }
 
     
@@ -64,9 +74,9 @@ export const Play=(props)=>{
         
         props.footerplaying?
 
-            <div className="play_feature" id="play_feature">
+            <div className="play_feature" id="play_feature" >
                 <div className="play_feature_caption">
-                    <img  src={props.music.image} />
+                    <img  src={props.music.image}  onClick={Maximize} />
                     <p>{props.music.title}</p>
                 </div>
 
@@ -126,7 +136,7 @@ export const Play=(props)=>{
                                         
  
                                     />
-                            <div className="minimize">
+                            <div className="minimize" onClick={Minimize}>
                             <FontAwesomeIcon  icon={faMinimize} onClick=''/>
                             </div>
 

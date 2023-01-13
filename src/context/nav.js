@@ -6,6 +6,7 @@ import { faBolt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
 import { useNavigate, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 // import { searchContext } from "./home";
 
 
@@ -97,9 +98,13 @@ export const Navbar=()=>{
 
                     <div className="nav" id="navbar">
 
+                        <Link to='/'>
                             <div className="logo">
                                 <img src={logo}></img>
                             </div>
+                        </Link>
+
+                            
                         
                             <label id="toggle" for='check' onClick={toggle}></label>
 

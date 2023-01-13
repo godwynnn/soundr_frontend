@@ -43,6 +43,7 @@ import { ScrollTrigger,gsap } from "gsap/all";
 import { Link } from "react-router-dom";
 import { useNavigate, useParams } from "react-router-dom";
 import { Detail } from "./detail";
+import { Music } from "./allsongs";
 
 // import Lettering from "./lettering";
 
@@ -416,6 +417,7 @@ const Home=()=>{
                     />}></Route>
 
                     <Route path="/:id"  element={<Detail/>} />
+                    <Route path="/recent"  element={<Music/>} />
 
             </Routes>  
             
@@ -549,70 +551,75 @@ export const Search=(props)=>{
             
        
             <section className="section_1">
-        
-                {searchedPost.map((post,i)=>(
+                    <div className="section_1_holder">
 
-                <div className="music_holder" key={i}  >
+                                
+                    {searchedPost.map((post,i)=>(
 
-
-                        <div className={"music_container" } >
-                        
-                                        
-                            <img  className={"music_image "}
-
-                            // id={post.id}
-                            // onClick={(e)=>{setAudioSrc(e)}} 
-                            src={'http://127.0.0.1:8000'+post.image} key={i}></img>
-
-                        
+                        <div className="music_holder" key={i}  >
 
 
-                            {/* <button >
-                                <FontAwesomeIcon icon={post.id == music_id?icon:faPlay} 
-                                // onClick={(e)=> ''} 
-                                id="playBtn"  />
-                            </button> */}
+                                <div className={"music_container" } >
+                                
+                                                
+                                    <img  className={"music_image "}
+
+                                    // id={post.id}
+                                    // onClick={(e)=>{setAudioSrc(e)}} 
+                                    src={'http://127.0.0.1:8000'+post.image} key={i}></img>
+
+                                
+
+
+                                    {/* <button >
+                                        <FontAwesomeIcon icon={post.id == music_id?icon:faPlay} 
+                                        // onClick={(e)=> ''} 
+                                        id="playBtn"  />
+                                    </button> */}
 
 
 
-                            <div className={"music_overlay " + (post.id == props.music_id && props.playing?'playing':'')} 
-                            id={post.id}
-                        
-                            // onClick={e=>{setAudioSrc(e)
-                            // setNext(false)
-                            // setCount(i)
-                            // }}
-                            ></div>
+                                    <div className={"music_overlay "+ (post.id == props.music_id && props.playing?'playing':'')} 
+                                    id={post.id}
+                                
+                                    onClick={(e)=>{props.setAudioSrc(e)
+                                    props.setNext(false)
+                                    props.setCount(i)
+                                    }}
+                                    ></div>
 
 
-                            </div>
-
-                        <div className="caption_holder">
-                            <div className="capt_hold">
-                                <p className="caption">{post.title}</p>
-                            </div>
-
-                            <div class="dropdown caption_menu">
-                                <button class="dropbtn caption_menu_btn"><FontAwesomeIcon  icon={faEllipsisVertical} /></button>
-                                    <div class="dropdown-content">
-                                        <a href={('http://127.0.0.1:8000'+post.audio)} download ><FontAwesomeIcon  icon={faDownload} /> Download</a>
-                                        <a href="#"> <FontAwesomeIcon  icon={faBookmark} /> Favourite</a>
-                                    
                                     </div>
+                            
+                        <Link to={`/${post.slug}`}  >
+                        
+                                <div className="caption_holder">
+                                    <div className="capt_hold">
+                                        <p className="caption">{post.title}</p>
+                                    </div>
+
+                                    <div class="dropdown caption_menu">
+                                        <button class="dropbtn caption_menu_btn"><FontAwesomeIcon  icon={faEllipsisVertical} /></button>
+                                            <div class="dropdown-content">
+                                                <a href={('http://127.0.0.1:8000'+post.audio)} download ><FontAwesomeIcon  icon={faDownload} /> Download</a>
+                                                <a href="#"> <FontAwesomeIcon  icon={faBookmark} /> Favourite</a>
+                                            
+                                            </div>
+                                    </div>
+                                                                        
+                                </div>
+                                
+                            </Link>
+                                
+                            
                             </div>
-                                                                
-                        </div>
-                        
-                    
-                        
-                    
+                                
+                                
+                                )
+                                
+                            )}
+
                     </div>
-                        
-                        
-                        )
-                        
-                    )}
-                    
             </section>
 
                 </main>

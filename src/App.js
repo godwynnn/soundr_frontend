@@ -8,7 +8,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Detail } from "./context/detail";
 
 
-
 function App() {
   // const {searched}=useContext(searchContext)
   const{ query }=useParams()

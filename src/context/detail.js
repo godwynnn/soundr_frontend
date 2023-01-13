@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom"
 import '../css/detail.css'
 import { Navbar } from "./nav"
 import { Play } from "./footerPlay";
+import WaveSurfer from 'wavesurfer.js';
 
 
 export const Detail=()=>{
@@ -14,23 +15,42 @@ export const Detail=()=>{
     const[footerplaying,setFooterPlaying]=useState(false)
     const[music,setMusic]=useState('')
     const {id}=useParams()
+    const waveform=useRef()
     function getPosts(){
         fetch(`http://127.0.0.1:8000/${id}/`)
         .then(res=>res.json())
         .then(data=>{setPost(data.music)
-        console.log(data)
+        // console.log(data)
         })
     }
 
     useEffect(()=>{
         getPosts()
-        console.log(music)
+        console.log(post.audio)
         // if (((localStorage.getItem('music_data') != ''))){
         //     setMusic(JSON.parse(localStorage.getItem('music_data')))
         // }
+        if(waveform.current){
+            let wavesurfer = WaveSurfer.create({
+                container: waveform.current,
+                waveColor: 'white',
+                progressColor: 'grey'
+            });
+            // wavesurfer.load(`http://127.0.0.1:8000/${post.audio}`);
+            const song='http://127.0.0.1:8000/media/audio/frodo_baggins_e.l_feat._nova_blaq_aac_75229.m4a'
+            wavesurfer.load(song);
+
+
+
+        }
+
+        
         
     },[])
 
+    
+    
+    
     return(
 
         <div className="detail_page" key={post.id}>
@@ -51,6 +71,7 @@ export const Detail=()=>{
                             <p>{post.artist_name}</p>
                             <p>{post.title}</p>
                         </div>
+                        <div id="waveform"  ref={waveform}></div>
                     
                    </div>
                 </div>

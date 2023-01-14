@@ -92,6 +92,10 @@ export const Navbar=()=>{
                     }
                 })
 
+                function redirectLogin(){
+                    navigate(`/auth`)
+                }
+
                 
 
                 return(
@@ -113,7 +117,7 @@ export const Navbar=()=>{
                                         <input placeholder="Search" onChange={(e)=>setInput(e)} value={searchInput} />
                                         {/* <button type="submit">search</button> */}
                                     </form>
-                                        <Button   variant="contained" className="auth_btn">Login</Button >
+                                        <Button   variant="contained" className="auth_btn" onClick={redirectLogin}>Login</Button >
                                     
                                 </div>
 

@@ -44,6 +44,7 @@ import { Link } from "react-router-dom";
 import { useNavigate, useParams } from "react-router-dom";
 import { Detail } from "./detail";
 import { Music } from "./allsongs";
+import { Authenticate } from "./auth";
 
 // import Lettering from "./lettering";
 
@@ -418,6 +419,7 @@ const Home=()=>{
 
                     <Route path="/:id"  element={<Detail/>} />
                     <Route path="/recent"  element={<Music/>} />
+                    <Route path="/auth"  element={<Authenticate/>} />
 
             </Routes>  
             

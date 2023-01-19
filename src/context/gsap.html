@@ -1,0 +1,40 @@
+% w = 1240 %>
+<% h = 874 %>
+<div class="loader df aic jcc">
+  <div>
+    <h1>Loading</h1>
+    <h2 class="loader--text">0%</h2>
+  </div>
+</div>
+<div class="demo-wrapper">
+  <header class="df aic jcc">
+    <div>
+      <h1>ScrollTrigger</h1>
+      <h2>demo</h2>
+    </div>
+  </header>
+  <section class="demo-text">
+    <div class="wrapper text">
+      ABCDEFGHIJKLMNOPQRSTUVWXYZ
+    </div>
+  </section>
+  <% (1..4).each do |i| %>
+    <section class="demo-gallery">
+      <ul class="wrapper">
+        <% (1..rand(3..4)).each do |i| %>
+          <li>
+            <img height="<%= h %>" src="https://source.unsplash.com/random/<%= w %>x<%= h %>?sig=<%= rand(0..206) %>" width="<%= w %>"/>
+          </li>
+        <% end %>
+      </ul>
+    </section>
+  <% end %>
+  <section class="demo-text">
+    <div class="wrapper text">
+      ABCDEFGHIJKLMNOPQRSTUVWXYZ
+    </div>
+  </section>
+  <footer class="df aic jcc">
+    <p>Images from <a href="https://unsplash.com/">Unsplash</a></p>
+  </footer>
+</div>

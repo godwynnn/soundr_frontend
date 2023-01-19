@@ -7,11 +7,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
 import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { AuthContext } from "./auth";
 // import { searchContext } from "./home";
 
 
 export const Navbar=()=>{
     const{searchInput,setSearchInput,setSearchedPost,setSearched}=useContext(searchContext)
+
+    const{isloggedIn,user,setIsLoggedIn}=useContext(AuthContext)
     const navigate=useNavigate()
     const{ query }=useParams()
     // const[searchUrl,setSearchUrl]=useState(`http://127.0.0.1:8000/search?q=${query}`)
@@ -93,10 +96,10 @@ export const Navbar=()=>{
                 })
 
                 function redirectLogin(){
-                    navigate(`/auth`)
+                    navigate(`/auth?login`)
                 }
 
-                
+                console.log('user is logged is '+isloggedIn)
 
                 return(
 
@@ -112,12 +115,21 @@ export const Navbar=()=>{
                         
                             <label id="toggle" for='check' onClick={toggle}></label>
 
+                            {/* {isloggedin? '' :
+                            
+                            } */}
+
                                 <div className="search_holder">
                                     <form onSubmit={searchPost}>
                                         <input placeholder="Search" onChange={(e)=>setInput(e)} value={searchInput} />
                                         {/* <button type="submit">search</button> */}
                                     </form>
-                                        <Button   variant="contained" className="auth_btn" onClick={redirectLogin}>Login</Button >
+                                    {isloggedIn?
+                                    <Button   variant="contained" className="auth_btn" onClick=''>Logout</Button >
+                                    :
+                                    <Button   variant="contained" className="auth_btn" onClick={redirectLogin}>Login</Button >
+                                    }
+                                        
                                     
                                 </div>
 

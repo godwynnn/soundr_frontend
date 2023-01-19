@@ -85,8 +85,8 @@ const Home=()=>{
     const[progress,SetCurrentProgress]=useState(0)
 
     // GSAP
-    const header_section1=useRef(null);
-    const header_section2=useRef(null);
+    const header_section1=React.createRef();
+    const header_section2=React.createRef();
 
     gsap.registerPlugin(ScrollTrigger);
     function headerAnime(){
@@ -208,18 +208,9 @@ const Home=()=>{
                 setSearched(false)
                 getAllPosts(); 
                 headerAnime()
-                
-                
-                
-                
+    
                 // console.log(this)
             },[])
-            
-            
-                
-                
-          
-
 
     // LOAD AND CONTROL MUSIC
                 function playSong(e){
@@ -414,7 +405,7 @@ const Home=()=>{
                         setNext={setNext}
                         setCount={setCount}
                         ref1={header_section1}
-                            // ref2={header_section2}
+                        ref2={header_section2}
                     />}></Route>
 
                     <Route path="/:id"  element={<Detail/>} />
@@ -446,6 +437,11 @@ const Home=()=>{
                                 setFooterPlaying={setFooterPlaying}
                                 
                                 />
+
+                    {/* <Authenticate/> */}
+
+
+                    
                           
 
                         

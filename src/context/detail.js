@@ -4,9 +4,11 @@ import '../css/detail.css'
 import { Navbar } from "./nav"
 import { Play } from "./footerPlay";
 import WaveSurfer from 'wavesurfer.js';
+import { useNavigate } from "react-router-dom";
 
 
 export const Detail=()=>{
+    const navigate=useNavigate()
     const[music_id,setMusicId]=useState(null)
     const [post, setPost]=useState([])
     const[playing,setPlaying]=useState(false)
@@ -16,12 +18,37 @@ export const Detail=()=>{
     const[music,setMusic]=useState('')
     const {id}=useParams()
     const waveform=useRef()
-    function getPosts(){
-        fetch(`http://127.0.0.1:8000/${id}/`)
-        .then(res=>res.json())
-        .then(data=>{setPost(data.music)
-        // console.log(data)
+    
+    // function getPosts(){
+    //     fetch(`http://127.0.0.1:8000/${id}/`)
+    //     .then(res=>{res.json()
+    //         console.log(res)
+    //     })
+        
+    //     .then(data=>{setPost(data.music)
+    //     // console.log(data)
+    //     })
+    // }
+    const getPosts=async ()=> {
+        const token=localStorage.getItem('token')
+        console.log(token)
+        const response= await fetch(`http://127.0.0.1:8000/${id}/`,{
+            method:'GET',
+            headers:{
+                'Accept': 'application/json',
+                'Authorization':`Token ${token}`,
+                'Content-Type': 'application/json'
+            }
         })
+        console.log(response.url)
+        if (response.status===401){
+            navigate(`/auth?login`)
+            localStorage.setItem('next_url',response.url)
+        }
+        const data=await response.json()
+
+        setPost(data.music)
+    
     }
 
     useEffect(()=>{

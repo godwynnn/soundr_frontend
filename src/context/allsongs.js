@@ -19,7 +19,8 @@ import ReactPaginate from 'react-paginate';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import '../css/allsongs.css'
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams,useLocation } from "react-router-dom";
+
 import { number } from "yup";
 
 
@@ -32,17 +33,17 @@ export const Music=(props)=>{
     const[posts,setPosts]=useState([])
     const[page_num,setPageNumbers]=useState(1)
     const[postsCount,setPostsCount]=useState(0)
-   
+    
 
 
     async function getAllPosts (baseUrl){
         await fetch(baseUrl)
-        .then((res)=>res.json().then((data)=>{
+        .then((res)=>res.json()).then((data)=>{
             setPosts(data.musics)
             setPageNumbers(data.num_pages)
             setPostsCount(data.post_count)
             console.log(data)
-        }))
+        })
     }
 
 

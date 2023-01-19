@@ -33,7 +33,7 @@ import AudioPlayer from 'react-h5-audio-player';
 
 import { Footer } from "./footer";
 
-export const Index=React.forwardRef((props,ref1)=>{
+export const Index=React.forwardRef((props,ref1,ref2)=>{
 
 
         
@@ -105,7 +105,7 @@ export const Index=React.forwardRef((props,ref1)=>{
 
 
 
-                    <div className="header_section2" >
+                    <div className="header_section2" ref={ref2} >
 
                             <div className="header_img">
 

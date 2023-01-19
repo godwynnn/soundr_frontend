@@ -22,18 +22,18 @@ export const Play=(props)=>{
 
     // console.log(props.progress)
    
-    const play_feature=document.querySelector('#play_feature')
-    console.log(play_feature)
+    const play_feature=React.createRef()
+    console.log(play_feature.current)
 
 
     function Minimize(){
-        play_feature.classList.add('min')
+        play_feature.current.classList.add('min')
 
     }
 
     function Maximize(){
-        if (play_feature.classList.contains('min')){
-            play_feature.classList.remove('min')
+        if (play_feature.current.classList.contains('min')){
+            play_feature.current.classList.remove('min')
         }
     }
 
@@ -74,7 +74,7 @@ export const Play=(props)=>{
         
         props.footerplaying?
 
-            <div className="play_feature" id="play_feature" >
+            <div className="play_feature" id="play_feature" ref={play_feature} >
                 <div className="play_feature_caption">
                     <img  src={props.music.image}  onClick={Maximize} />
                     <p>{props.music.title}</p>

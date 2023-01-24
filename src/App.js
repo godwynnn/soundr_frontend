@@ -7,7 +7,8 @@ import { searchContext } from "./context/home";
 import { useNavigate, useParams } from "react-router-dom";
 import { Detail } from "./context/detail";
 import { AuthContext } from "./context/auth";
-
+import { useLocation } from "react-router-dom";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 function App() {
   // const {searched}=useContext(searchContext)
@@ -17,6 +18,9 @@ function App() {
   const[searched,setSearched]=useState(false)
   const [user,setUserData]=useState(null)
   const [isloggedIn,setIsLoggedIn]=useState(false)
+  const location=useLocation()
+
+  console.log(location)
 
   const auth_data={
     user,
@@ -34,21 +38,23 @@ function App() {
 
   return (
 
-      <AuthContext.Provider value={auth_data}>
+    <GoogleOAuthProvider clientId={localStorage.getItem('g_client_id')}>
+        <AuthContext.Provider value={auth_data}>
 
 
-          
-        <searchContext.Provider value={{searchInput,setSearchInput,setSearchedPost,searchedPost,setSearched,searched}} > 
-        {/* <Routes>
+            
+          <searchContext.Provider value={{searchInput,setSearchInput,setSearchedPost,searchedPost,setSearched,searched}} > 
+          {/* <Routes>
 
-          <Route path="/search=:query" element={<Search/>}/>
-          <Route path="/"  element={<Home/>} />
-          <Route path="/:id"  element={<Detail/>} />
+            <Route path="/search=:query" element={<Search/>}/>
+            <Route path="/"  element={<Home/>} />
+            <Route path="/:id"  element={<Detail/>} />
 
-        </Routes> */}
-        <Home/>
-        </searchContext.Provider>
-    </AuthContext.Provider>
+          </Routes> */}
+          <Home/>
+          </searchContext.Provider>
+      </AuthContext.Provider>
+    </GoogleOAuthProvider>
   );
 }
 

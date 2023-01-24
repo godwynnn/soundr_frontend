@@ -76,7 +76,7 @@ export const Play=(props)=>{
 
             <div className="play_feature" id="play_feature" ref={play_feature} >
                 <div className="play_feature_caption">
-                    <img  src={props.music.image}  onClick={Maximize} />
+                    <img  src={'http://127.0.0.1:8000'+props.music.image}  onClick={Maximize} />
                     <p>{props.music.title}</p>
                 </div>
 
@@ -122,7 +122,7 @@ export const Play=(props)=>{
                             
                             <AudioPlayer
                                     autoPlay
-                                    src={props.music.audio}
+                                    src={'http://127.0.0.1:8000'+props.music.audio}
 
                                     onPlay={props.play}
                                     onPause={props.pause}

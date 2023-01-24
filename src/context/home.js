@@ -45,7 +45,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Detail } from "./detail";
 import { Music } from "./allsongs";
 import { Authenticate } from "./auth";
-
+import { MostListened } from "./most_listened";
 // import Lettering from "./lettering";
 
 // import '../css/index.css'
@@ -173,7 +173,7 @@ const Home=()=>{
              await fetch(`http://127.0.0.1:8000/`)
             .then(response=>response.json())
             .then(data=>{
-                console.log(data.music)
+                console.log(data)
                 // localStorage.setItem('searchvalue','')
                 setPosts(data.music)
                 setPlaying(false)
@@ -276,7 +276,7 @@ const Home=()=>{
                 ).then( data=>{
                 console.log(data)
                   
-                 setMusic( data)
+                 setMusic( data.music)
                  localStorage.setItem('music_data',JSON.stringify(data))
             
                 console.log(music_id)
@@ -308,7 +308,7 @@ const Home=()=>{
 
 
                     await fetch(url).then(response=>response.json()
-                        ).then(data=>setMusic(data))
+                        ).then(data=>setMusic(data.music))
 
                         footer_audio.current.audio.current.autoplay=true
                         
@@ -334,7 +334,7 @@ const Home=()=>{
                         setPlaying(true)
 
                         await fetch(url).then(response=>response.json()
-                                ).then(data=>setMusic(data))
+                                ).then(data=>setMusic(data.music))
 
                             footer_audio.current.audio.current.autoplay=true
                             
@@ -411,6 +411,14 @@ const Home=()=>{
                     <Route path="/:id"  element={<Detail/>} />
                     <Route path="/recent"  element={<Music/>} />
                     <Route path="/auth"  element={<Authenticate/>} />
+                    <Route path="/most-listened" 
+                     element={<MostListened
+                        music_id={music_id}
+                        playing={playing}
+                        setAudioSrc={(e)=>setAudioSrc(e)}
+                    
+                    
+                    />} />
 
             </Routes>  
             
@@ -466,12 +474,14 @@ export const Menu=()=>{
 
                     <ul >
                         
-                        <li>home</li>
-                        <li>new release</li>
-                        <li>latest</li>
-                        <li>genre</li>
-                        <li>contact</li>
-
+                        
+                    <Link to='/'><li>home</li></Link>
+                    <Link  ><li>new release</li></Link>
+                    <Link  to={'/most-listened'}><li>most listened</li></Link>
+                    <Link><li>genre</li></Link>
+                    <Link><li>contact</li></Link>
+                        
+                        
 
                     </ul>
 

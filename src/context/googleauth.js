@@ -1,43 +1,59 @@
-const SocialGoogleLoginFunc=(accesstoken,app_id,app_secret)=>{
-    // console.log(`MY CREDENTIALS ${app_id},${app_secret}`)
-    // let client_id='nILBGJCOSiaLKDyRZeFpHmUoyDw0PgChrkEGzjkj'
-    // let client_secret='fkUSbr5mtR6oIX3osX51zS1ycbWOfNWGvEjhhKwVQvBb3rJ8gRN1BW2gkFMiPBfBKq3437IC3joXQUEFxPRs1PSXfSgKehOCwoRJoNgjtAzI6ZXwdjyX3RyZfTKKb8hE'
+import { useContext } from "react";
+import { AuthContext } from "./auth";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-    // console.log(client_secret.includes(' '))
-    // http://127.0.0.1:8000/client/auth/convert-token
-    // grant_type:"convert_token",
-    // client_id: client_id,
-    // client_secret: client_secret,
-    // backend:"google-oauth2", 
-    // token:accesstoken
-    // http://127.0.0.1:8000/
-    fetch('http://127.0.0.1:8000/auth/api/register-by-access-token/social/google-oauth2/',{
-       
-        method: "POST",
-        body: JSON.stringify({
-            
-            access_token:accesstoken
 
-        }),
-        headers: {
-            "Content-Type": 'application/json;charset',
-            "accept":'application/json;charset'
 
-        }
 
-    })
-    .then(response=>{
-        return response.json()
-    }).then(data=>{
-       try{
+// function getCookie(name) {
+//     let cookieValue = null;
+//     if (document.cookie && document.cookie !== '') {
+//         const cookies = document.cookie.split(';');
+//         for (let i = 0; i < cookies.length; i++) {
+//             const cookie = cookies[i].trim();
+//             // Does this cookie string begin with the name we want?
+//             if (cookie.substring(0, name.length + 1) === (name + '=')) {
+//                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+//                 break;
+//             }
+//         }
+//     }
+//     return cookieValue;
+// }
+// const csrftoken = getCookie('csrftoken');
+
+
+
+
+async function SocialGoogleLoginFunc (accesstoken){
+    
+    
+   
+        const response= await fetch('http://127.0.0.1:8000/auth/api/register-by-access-token/social/google-oauth2/',{
+            method:"POST",
+            body:   JSON.stringify({
+                access_token:accesstoken
+            }),
+            headers:{
+                "Content-Type": "application/json",
+                "Accept":"application/json"
+
+            }
+        })
+        // const {data}=response
+        const data=await response.json()
         console.log(data)
-        localStorage.setItem('access_token',data.access_token)
-        localStorage.setItem('refresh_token',data.refresh_token)
-       }catch(error){
-        console.log(error)
-       }
-
-    })
+       localStorage.setItem('token',data.token)
+        localStorage.setItem('logged_in',true)
+        // setUserData(data.user)
+        // if (localStorage.getItem('logged_in')){
+        //     setIsLoggedIn(true)
+        //     // Redirect back to previous location, or home
+        //     const { state } = location;
+        //     const { from } = state || { from: { pathname: "/" } };
+        //     navigate(from, { replace: true });
+        // } 
 }
 
 export default SocialGoogleLoginFunc

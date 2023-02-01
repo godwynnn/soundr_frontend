@@ -105,7 +105,7 @@ export const Index=React.forwardRef((props,ref1,ref2)=>{
 
 
 
-                    <div className="header_section2" ref={ref2} >
+                    <div className="header_section2"  >
 
                             <div className="header_img">
 

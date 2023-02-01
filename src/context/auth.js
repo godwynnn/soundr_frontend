@@ -21,9 +21,13 @@ import {Formik, useFormik} from 'formik'
 import * as Yup from 'yup'
 import { useContext } from "react";
 import { GoogleLogin } from '@react-oauth/google';
-import SocialGoogleLoginFunc from "./googleauth";
+// import SocialGoogleLoginFunc from "./googleauth";
 import { useGoogleLogin } from "@react-oauth/google";
+
+// import GoogleLogin from "react-google-login";
 import axios from 'axios';
+import jwtDecode from "jwt-decode";
+import { gapi } from 'gapi-script';
 // import '../css/index.css'
 
 
@@ -53,36 +57,88 @@ export  const Authenticate=()=>{
     const location=useLocation()
 
 
+
+
+    async function SocialGoogleLoginFunc (accesstoken){
+            
+            
+        
+        const response= await fetch('http://127.0.0.1:8000/auth/api/register-by-access-token/social/google-oauth2/',{
+            method:"POST",
+            body:   JSON.stringify({
+                access_token:accesstoken
+            }),
+            headers:{
+                "Content-Type": "application/json",
+                "Accept":"application/json"
+
+            }
+        })
+        // const {data}=response
+        const data=await response.json()
+        console.log(data)
+        localStorage.setItem('token',data.token)
+        localStorage.setItem('logged_in',true)
+        setUserData(data.user)
+        if (localStorage.getItem('logged_in')){
+            setIsLoggedIn(true)
+            // Redirect back to previous location, or home
+            const { state } = location;
+            const { from } = state || { from: { pathname: "/" } };
+            navigate(from, { replace: true });
+        } 
+    }
+
     async function LoginInfo(){
         const response= await fetch('http://127.0.0.1:8000/auth/login')
 
         const data=await response.json()
         console.log(data)
+        setClientId(data.g_client_id)
         localStorage.setItem('g_client_id',data.g_client_id)
         
     }
 
     
-        const GoogleLoginFunc = useGoogleLogin({
-            flow: 'auth-code',
-            onSuccess: async (codeResponse) => {
-                console.log(codeResponse);
-                
-                // const tokens = await axios.post(
-                //     'http://localhost:3000/auth/google', {
-                //         code: codeResponse.code,
-                //     });
+       
 
-                // console.log(tokens);
-                SocialGoogleLoginFunc(codeResponse.code)
-            },
-            onError: errorResponse => console.log(errorResponse),
-        });
+        const GoogleLoginFunc=useGoogleLogin({
+            onSuccess: tokenResponse =>{
+                // console.log(tokenResponse),
+                SocialGoogleLoginFunc(tokenResponse.access_token)
+
+            }
+            
+          });
+
+          
+            // const GoogleLoginFunc = useGoogleLogin({
+            //     flow: 'auth-code',
+            //     onSuccess: async (tokenResponse) => {
+            //         console.log(tokenResponse);
+            //         const tokens = await axios.post(
+            //             'http://127.0.0.1:8000/auth/api/register-by-access-token/social/google-oauth2/', {
+            //                 'access_token': tokenResponse.access_token,
+            //             });
+
+            //         console.log(tokens);
+            //     },
+            //     onError: errorResponse => console.log(errorResponse),
+            // });
 
     useEffect(()=>{
         LoginInfo()
     },[])
 
+
+
+            
+
+
+
+
+
+  
     // console.log(location)
     const loginformik=useFormik({
         initialValues:{
@@ -195,9 +251,12 @@ export  const Authenticate=()=>{
     return(
 
 <React.Fragment>
+{/*         
+        {localStorage.getItem('logged_in')?
+        navigate('/')
         
-        
-            <div className="auth_bg">
+        : */}
+        <div className="auth_bg">
                 <div className="auth_holder">
                     <div className="auth_toggle">
                         <div className="btn_box" id="btn_box" ref={btn_boxRef}></div>
@@ -270,23 +329,16 @@ export  const Authenticate=()=>{
                             Login
                             </Button>
                             <br />
+
+                           
+                           
                             <GoogleLogin
-                                
                                 onSuccess={GoogleLoginFunc}
-
-                                // onSuccess={credentialResponse => {
-                                //     console.log(credentialResponse.credential);
-                                //     SocialGoogleLoginFunc(credentialResponse.credential)
-                                //   }}
-
-
                                 onError={() => {
                                     console.log('Login Failed');
                                 }}
-
                                 useOneTap
-                                />;
-                            
+                                />
                             
                         
                     </form>
@@ -401,6 +453,9 @@ export  const Authenticate=()=>{
                 </Box>
             </div>
             </div>
+        
+    {/* } */}
+            
             
         
         

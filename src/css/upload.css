@@ -1,0 +1,17 @@
+.create_landing{
+    background-color: black;
+    width: 100%;
+    min-height: 120vh;
+    /* border: 1px solid red; */
+    margin-top: 15vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.create_form{
+    width: 50%;
+    min-height: 90vh;
+    background-color: whitesmoke;
+    padding: 4% 2%;
+}

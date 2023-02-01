@@ -46,6 +46,7 @@ import { Detail } from "./detail";
 import { Music } from "./allsongs";
 import { Authenticate } from "./auth";
 import { MostListened } from "./most_listened";
+import CreateUpload from "./create";
 // import Lettering from "./lettering";
 
 // import '../css/index.css'
@@ -419,6 +420,10 @@ const Home=()=>{
                     
                     
                     />} />
+
+                    <Route path="/create" element={<CreateUpload/>} >
+
+                    </Route>
 
             </Routes>  
             

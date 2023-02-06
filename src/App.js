@@ -20,7 +20,7 @@ function App() {
   const [isloggedIn,setIsLoggedIn]=useState(false)
   const location=useLocation()
 
-  console.log(location)
+  // console.log(location)
 
   const auth_data={
     user,
@@ -34,7 +34,9 @@ function App() {
     // registerButton,
 
 }
-  console.log(searched)
+
+console.log(isloggedIn)
+  // console.log(searched)
 
   return (
 

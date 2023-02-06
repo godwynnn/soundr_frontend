@@ -8,6 +8,7 @@ import { FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
 import { useNavigate, useParams,useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./auth";
+import { faUpload } from "@fortawesome/free-solid-svg-icons";
 // import { searchContext } from "./home";
 
 
@@ -80,11 +81,27 @@ export const Navbar=()=>{
                 },[])
 
                 function logoutUser(){
-                    if(localStorage.getItem('logged_in')){
-                        localStorage.setItem('logged_in',false)
-                        localStorage.setItem('token','')
-                        navigate('/')
-                    }
+                    const token=localStorage.getItem('token')
+                    fetch('http://127.0.0.1:8000/auth/logout',{
+                        method:'POST',
+                        headers:{
+                            'Accept': 'application/json',
+                        'Authorization':`Token ${token}`,
+                        'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(res=>res.json()).then(data=>{
+                        console.log(data)
+                        if(data.logged_out==true){
+                            if(localStorage.getItem('logged_in')){
+                                localStorage.setItem('logged_in',false)
+                                localStorage.setItem('token','')
+                                navigate('/')
+                            }
+                            
+                        }
+                    })
+                    
                 }
 
 
@@ -139,13 +156,19 @@ export const Navbar=()=>{
                                     <input placeholder="Search" onChange={(e)=>setInput(e)} value={searchInput} />
                                     {/* <button type="submit">search</button> */}
                                 </form>
+
+                                
                                 {JSON.parse(localStorage.getItem('logged_in'))?
                                 <Button   variant="contained" className="auth_btn" onClick={logoutUser}>Logout</Button >
                                 :
                                 <Button   variant="contained" className="auth_btn" onClick={redirectLogin}>Login</Button >
                                 }
-                                    
                                 
+                                
+                                <Link to={'/create'}>
+                                    <button className="upload_btn"><FontAwesomeIcon  icon={faUpload} /></button>
+
+                                </Link>
                             </div>
 
                                 <input type='checkbox' id="check"  />

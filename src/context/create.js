@@ -8,27 +8,38 @@ import '../css/upload.css'
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
-import { AudioFile } from "@mui/icons-material";
+import { AudioFile, HeadsetSharp } from "@mui/icons-material";
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel';
-
+import { AuthContext } from "./auth";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+// import { useLocation } from "react-router-dom";
 
 
 
 const CreateUpload =()=>{
 
+
+    const location=useLocation()
+    const navigate=useNavigate()
+    const{isloggedIn}=useContext(AuthContext)
     const[song_genre,setSongGenre]=useState([])
-    const [audio, setAudio] = useState('');
-    const handleAudioUpload = event => {
-        setAudio(event.target.files[0]);
-        console.log(event.target.files)
-        console.log(event.target.value)
-    }
+    // const [audio, setAudio] = useState('');
+    // const handleAudioUpload = event => {
+    //     setAudio(event.target.files[0]);
+    //     console.log(event.target.files)
+    //     console.log(event.target.value)
+    // }
 
     const getSongGenre=async()=>{
-        const res =await fetch('http://127.0.0.1:8000/create')
+        const token=localStorage.getItem('token')
+        const res =await fetch('http://127.0.0.1:8000/create',{
+            method:'GET',
+            headers:{'Authorization':`Token ${token}`},
+        })
         const data= await res.json()
         console.log(data.genre)
         setSongGenre(data.genre)
@@ -58,25 +69,36 @@ const CreateUpload =()=>{
             }),
         
             onSubmit:((values)=>{
-                
-                const data={
-                    artist_name:values.artist_name,
-                    title:values.title,
-                    audio: values.audio.name,
-                    image:values.image.name,
-                    description:values.description,
-                    genre:values.genre,
-                    
-                    
-                }
+                const token=localStorage.getItem('token')
+                // const data={
+                //     artist_name:values.artist_name,
+                //     title:values.title,
+                //     audio: values.audio,
+                //     image:values.image,
+                //     description:values.description,
+                //     genre:values.genre,
+                 
+                // }
+
+
+                const data=new FormData()
+                data.append('artist_name',values.artist_name)
+                data.append('title',values.title)
+                data.append('audio',values.audio)
+                data.append('image',values.image)
+                data.append('description',values.description)
+                data.append('genre',values.genre)
+
 
                 console.log(data)
                 fetch('http://127.0.0.1:8000/create',{
                     method:"POST",
-                    body:JSON.stringify(data),
+                    body:data,
                     headers:{
-                        "Content-Type": "application/json",
-                        "Accept":"application/json"
+                        // "Content-Type": "application/x-www-form-urlencoded",
+                        // "Accept":"application/json",
+                        // 'Content-Type': 'multipart/form-data'
+                        'Authorization':`Token ${token}`,
                     },
                     
                 }).then(res=>res.json())
@@ -99,72 +121,84 @@ const CreateUpload =()=>{
 
     
         return(
-
+        
             <div className="create_landing">
-            <form action="" 
-                className="create_form" 
-                // onSubmit={(e)=>{
-                //     e.preventDefault();
-                //     formik.handleSubmit();
-                // }}
-            onSubmit={formik.handleSubmit}
-            >
+
+                {JSON.parse(localStorage.getItem('logged_in'))?
                 
-                    <Box component="form" sx={{  width: '100%', display:'flex',flexDirection:'column',gap:'20px' }}  
-                        >
-                        <TextField 
-                        id="outlined-basic"
-                         label="Artist Name" 
-                         variant="outlined" 
-                         name="artist_name"
-                         value={formik.values.artist_name}
-                         onChange={formik.handleChange} 
-                          />
-                        <TextField id="outlined-basic" label="Title" variant="outlined" name='title' onChange={formik.handleChange} value={formik.values.title} />
-
-                        <IconButton  aria-label="upload picture" component="label" sx={{ background:'grey',width:'20%',borderRadius:'5%' }}>
-                            <input hidden accept="audio" type="file" name='audio'  onChange={(e)=>formik.setFieldValue("audio",e.currentTarget.files[0])} />
-                            <AudioFile  />
-                        </IconButton>
-
-                        <IconButton  aria-label="upload picture" component="label" sx={{ background:'grey',width:'20%',borderRadius:'5%'  }}>
-                            <input hidden accept="image" type="file"  name='image'  onChange={(e)=>formik.setFieldValue("image",e.currentTarget.files[0])}  />
-                            <PhotoCamera   />
-                        </IconButton>
-
-                        {/* <input type="file" value={audio} onChange={handleAudioUpload} name='audio'  /> */}
-
-                        <FormControl sx={{width:'50%' , color:'black',}}>
-                            <InputLabel id="demo-simple-select-label">Genre</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={formik.values.genre}
-                                name='genre'
-                                label="Genre"
-                                onChange={formik.handleChange('genre')}
-                                
+                
+                
+                    <form action="" 
+                        className="create_form" 
+                        // onSubmit={(e)=>{
+                        //     e.preventDefault();
+                        //     formik.handleSubmit();
+                        // }}
+                    onSubmit={formik.handleSubmit}
+                    >
+                        
+                            <Box component="form" sx={{  width: '100%', display:'flex',flexDirection:'column',gap:'20px' }}  
                                 >
+                                <TextField 
+                                id="outlined-basic"
+                                label="Artist Name" 
+                                variant="outlined" 
+                                name="artist_name"
+                                value={formik.values.artist_name}
+                                onChange={formik.handleChange} 
+                                />
+                                <TextField id="outlined-basic" label="Title" variant="outlined" name='title' onChange={formik.handleChange} value={formik.values.title} />
 
-                                {song_genre.map(genre=>(
-                                    <MenuItem key={genre.id} value={genre.id} sx={{color:'black'}}>{genre.name}</MenuItem>
-                                ))}
-                                
-                                
-                                </Select>
-                            </FormControl>
+                                <IconButton  aria-label="upload picture" component="label" sx={{ background:'grey',width:'20%',borderRadius:'5%' }}>
+                                    <input hidden accept="audio" type="file" name='audio'  onChange={(e)=>formik.setFieldValue("audio",e.currentTarget.files[0])} />
+                                    <AudioFile  />
+                                </IconButton>
 
-                        <TextField id="outlined-basic" className="description" label="Desciption" variant="outlined" rows={6} multiline />
+                                <IconButton  aria-label="upload picture" component="label" sx={{ background:'grey',width:'20%',borderRadius:'5%'  }}>
+                                    <input hidden accept="image" type="file"  name='image'  onChange={(e)=>formik.setFieldValue("image",e.currentTarget.files[0])}  />
+                                    <PhotoCamera   />
+                                </IconButton>
 
-                    </Box>
-                    <br />
+                                {/* <input type="file" value={audio} onChange={handleAudioUpload} name='audio'  /> */}
 
-                <Button variant="contained" sx={{width:'30%'}} type='submit' >Submit</Button>
-  
+                                <FormControl sx={{width:'50%' , color:'black',}}>
+                                    <InputLabel id="demo-simple-select-label">Genre</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={formik.values.genre}
+                                        name='genre'
+                                        label="Genre"
+                                        onChange={formik.handleChange('genre')}
+                                        
+                                        >
 
-                
-            </form>
-                
+                                        {song_genre.map(genre=>(
+                                            <MenuItem key={genre.id} value={genre.id} sx={{color:'black'}}>{genre.name}</MenuItem>
+                                        ))}
+                                        
+                                        
+                                        </Select>
+                                    </FormControl>
+
+                                <TextField id="outlined-basic" className="description" name="description" value={formik.values.description} onChange={formik.handleChange} label="Desciption" variant="outlined" rows={6} multiline />
+
+                            </Box>
+                            <br />
+
+                        <Button variant="contained" sx={{width:'30%'}} type='submit' >Submit</Button>
+        
+
+                        
+                    </form>
+                :
+                navigate(
+                    `/auth?login`,
+                    {
+                        state: { from: location }, // <-- pass current location
+                        replace: true
+                    }
+                    )}
             </div>
         )
     

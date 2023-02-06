@@ -51,7 +51,11 @@ export  const Authenticate=()=>{
     const {setIsLoggedIn,setUserData,isloggedIn,}=useContext(AuthContext)
 
     
-
+    const handleClickShowPassword = () => setShowPassword(!showPassword);
+  
+    const handleMouseDownPassword = (event) => {
+      event.preventDefault();
+    };
 
 
     const location=useLocation()
@@ -166,9 +170,9 @@ export  const Authenticate=()=>{
                 localStorage.setItem('token',data.token)
                 localStorage.setItem('logged_in',true)
                 setUserData(data.user)
-                // setIsLoggedIn(true)
+                setIsLoggedIn(true)
                 if (localStorage.getItem('logged_in')){
-                    setIsLoggedIn(true)
+                    // setIsLoggedIn(true)
                     // Redirect back to previous location, or home
                     const { state } = location;
                     const { from } = state || { from: { pathname: "/" } };
@@ -221,11 +225,7 @@ export  const Authenticate=()=>{
     // console.log(registerformik.errors)
 
 
-    const handleClickShowPassword = () => setShowPassword(!showPassword);
-  
-    const handleMouseDownPassword = (event) => {
-      event.preventDefault();
-    };
+    
 
     function loginButton(){
         loginRef.current.style.left='0%'

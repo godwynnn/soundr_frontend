@@ -47,7 +47,15 @@ body{
 .search_holder form, .auth_btn{
     display: inline;
 }
-
+.upload_btn{
+    background-color: black;
+    border-radius: 50%;
+    float: right;
+    margin-right: 4%;
+    font-size: 20px;
+    padding: 1%;
+    cursor: pointer;
+}
 .nav input{
     /* float: left; */
     width: 60%;
@@ -443,19 +451,23 @@ body{
     display: flex;
     flex-direction: row;
     text-decoration: none;
+    justify-content: space-between;
 }
 .caption_holder .capt_hold{
-    width: 80%;
+    width: 120%;
     height: 100%;
+    float: left;
     
     /* border: 1px solid red; */
 }
 .caption_menu_btn{
-    border: 1px solid red;
+    /* border: 1px solid red; */
     height: 100%;
 }
 .capt_hold .caption{
     text-decoration: none;
+    /* border: 1px solid red; */
+    width: 100%;
 }
 .dropbtn {
     background-color: transparent;
@@ -468,8 +480,14 @@ body{
   }
   
   .dropdown {
+    /* float: right; */
     position: relative;
     display: inline-block;
+    /* border: 1px solid red; */
+    margin-right: 1%;
+    width: 20%;
+    
+    
   }
   
   .dropdown-content {

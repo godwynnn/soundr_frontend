@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 import {Routes,Route} from "react-router-dom"
 
-import { Footer } from "./footer";
+import { Footer } from "../context/footer";
 import ReactPaginate from 'react-paginate';
 // import { Pagination } from "react-bootstrap";
 // import { Pagination,PaginationProps } from 'antd';
@@ -24,25 +24,33 @@ import { useNavigate, useParams,useLocation } from "react-router-dom";
 import { number } from "yup";
 
 
-export const Music=(props)=>{
+export const UserIndex=(props)=>{
 
 
     const navigate=useNavigate()
-    const baseUrl=`http://127.0.0.1:8000/recent`
+    const baseUrl=`http://127.0.0.1:8000/`
 
     const[posts,setPosts]=useState([])
     const[page_num,setPageNumbers]=useState(1)
     const[postsCount,setPostsCount]=useState(0)
-    
+    const token=localStorage.getItem('token')
 
 
-    async function getAllPosts (baseUrl){
-        await fetch(baseUrl)
+    async function getAllPosts (){
+        await fetch(baseUrl,{
+            method:'GET',
+            headers:{
+                'Authorization':`Token ${token}`
+
+            }
+
+        })
         .then((res)=>res.json()).then((data)=>{
-            setPosts(data.musics)
-            setPageNumbers(data.num_pages)
-            setPostsCount(data.post_count)
+            setPosts(data.music)
+            
             console.log(data)
+            // setPosts(data.music)
+            // setPlaying(false)
         })
     }
 
@@ -51,11 +59,9 @@ export const Music=(props)=>{
     useEffect(()=>{
         
         
-        if (localStorage.getItem('pageUrl')!=''){
-            getAllPosts(JSON.parse(localStorage.getItem('pageUrl')))
-        }else{
-            getAllPosts(baseUrl)
-        }
+       
+            getAllPosts()
+        
 
         // getAllPosts(baseUrl)
            
@@ -209,10 +215,10 @@ export const Music=(props)=>{
                                 
             </section>
 
-                    <div className="paginate_nav">
-                    {/* <Pagination.First  onClick={FirstPage}/>
+                    {/* <div className="paginate_nav">
+                     <Pagination.First  onClick={FirstPage}/>
                         <Pagination  >{items}</Pagination>
-                    <Pagination.Last onClick={LastPage}/> */}
+                    <Pagination.Last onClick={LastPage}/> 
 
 
             <Stack spacing={2}>
@@ -228,7 +234,7 @@ export const Music=(props)=>{
                         onChange={(e,value)=>{changeUrl(baseUrl+`?page=${value-1}`);navigate(`?page=${value}`)}}
                     />
                     </Stack>
-                    </div>
+                    </div> */}
                    
     
         

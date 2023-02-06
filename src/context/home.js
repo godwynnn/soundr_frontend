@@ -27,6 +27,7 @@ import { Play } from "./footerPlay";
 import { Navbar } from "./nav";
 import { Footer } from "./footer";
 import { Index } from "./index";
+import { UserIndex } from "../usercontext";
 
 // import Button from 'react-bootstrap/Button';
 
@@ -88,6 +89,7 @@ const Home=()=>{
     // GSAP
     const header_section1=React.createRef();
     const header_section2=React.createRef();
+    const token=localStorage.getItem('token')
 
     gsap.registerPlugin(ScrollTrigger);
     function headerAnime(){
@@ -171,7 +173,12 @@ const Home=()=>{
 
          async function  getAllPosts(){
             
-             await fetch(`http://127.0.0.1:8000/`)
+             await fetch(`http://127.0.0.1:8000/`,{
+                // method:'GET',
+                // headers:{
+                //     'Authorization':`Token ${token}`|| '',
+                // }
+             })
             .then(response=>response.json())
             .then(data=>{
                 console.log(data)
@@ -385,6 +392,26 @@ const Home=()=>{
 
 
             
+            const addToFavourite=async (e)=>{
+                e.preventDefault()
+                if (JSON.parse(localStorage.getItem('logged_in'))){
+                    const res=await fetch(`http://127.0.0.1:8000/add/favourite?music_id=${e.target.id}`,{
+                        method:'POST',
+                        headers:{
+                            'Authorization':`Token ${token}`,
+
+                        }
+
+                    })
+                    const data=await res.json()
+                    console.log(data)
+
+                }
+                else{
+                    navigate('/auth?login')
+                }
+
+            }
         
 
         return(
@@ -396,22 +423,55 @@ const Home=()=>{
             <Routes>
 
             
-                    <Route path="/search=:query"  element={<Search searchedposts={searchedPost}/>}></Route>  
-
-                    <Route path="/" element={<Index 
-                        posts={posts}
+                    <Route path="/search=:query"  
+                    element={<Search 
+                        searchedposts={searchedPost}
                         music_id={music_id}
                         playing={playing}
                         setAudioSrc={(e)=>setAudioSrc(e)}
-                        setNext={setNext}
-                        setCount={setCount}
-                        ref1={header_section1}
-                        ref2={header_section2}
-                    />}></Route>
+                    />}>
+                    </Route>
+
+
+                    {JSON.parse(localStorage.getItem('logged_in'))?
+                            <Route path="/" element={<UserIndex 
+                                posts={posts}
+                                music_id={music_id}
+                                playing={playing}
+                                setAudioSrc={(e)=>setAudioSrc(e)}
+                                setNext={setNext}
+                                setCount={setCount}
+                                // ref1={header_section1}
+                                // ref2={header_section2}
+                                addToFavourite={addToFavourite}
+                            />}></Route>
+                    :
+                            <Route path="/" element={<Index 
+                                posts={posts}
+                                music_id={music_id}
+                                playing={playing}
+                                setAudioSrc={(e)=>setAudioSrc(e)}
+                                setNext={setNext}
+                                setCount={setCount}
+                                ref1={header_section1}
+                                ref2={header_section2}
+                                addToFavourite={addToFavourite}
+                            />}></Route>
+                    }
+                    
+
+                
 
                     <Route path="/:id"  element={<Detail/>} />
-                    <Route path="/recent"  element={<Music/>} />
+                    <Route path="/musics"  element={<Music
+                    // searchedposts={searchedPost}
+                    music_id={music_id}
+                    playing={playing}
+                    setAudioSrc={(e)=>setAudioSrc(e)}
+                    />} />
+                    
                     <Route path="/auth"  element={<Authenticate/>} />
+
                     <Route path="/most-listened" 
                      element={<MostListened
                         music_id={music_id}

@@ -33,7 +33,7 @@ import AudioPlayer from 'react-h5-audio-player';
 
 import { Footer } from "./footer";
 
-export const Index=React.forwardRef((props,ref1,ref2)=>{
+export const Index=React.forwardRef((props,ref1)=>{
 
 
         
@@ -84,7 +84,7 @@ export const Index=React.forwardRef((props,ref1,ref2)=>{
                         
                     
             <div className="header">
-                    <div className="header_section1" ref={ref1}>
+                    <div className="header_section1" ref={props.ref1}>
 
                         <div className="header_caption">
                             <p>
@@ -105,7 +105,7 @@ export const Index=React.forwardRef((props,ref1,ref2)=>{
 
 
 
-                    <div className="header_section2"  >
+                    <div className="header_section2" ref={props.ref2}  >
 
                             <div className="header_img">
 
@@ -165,25 +165,28 @@ export const Index=React.forwardRef((props,ref1,ref2)=>{
 
                                                 </div>
                                         
-                                    <Link to={`/${post.slug}`}  >
+                                    
                                     
                                             <div className="caption_holder">
+                                            <Link to={`/${post.slug}`}  >
                                                 <div className="capt_hold">
                                                     <p className="caption">{post.title}</p>
                                                 </div>
+                                                </Link>
 
                                                 <div class="dropdown caption_menu">
                                                     <button class="dropbtn caption_menu_btn"><FontAwesomeIcon  icon={faEllipsisVertical} /></button>
                                                         <div class="dropdown-content">
                                                             <a href={('http://127.0.0.1:8000'+post.audio)} download ><FontAwesomeIcon  icon={faDownload} /> Download</a>
-                                                            <a href="#"> <FontAwesomeIcon  icon={faBookmark} /> Favourite</a>
+                                                            <a id={post.id}  onClick={e=>props.addToFavourite(e)} > 
+                                                            <FontAwesomeIcon  icon={faBookmark} style={{}} /> Favourite</a>
                                                         
                                                         </div>
                                                 </div>
                                                                                     
                                             </div>
                                             
-                                        </Link>
+                                         
                                             
                                         
                                         </div>
@@ -197,7 +200,7 @@ export const Index=React.forwardRef((props,ref1,ref2)=>{
                                 
                             <br /><br /><br />
                             {/* <audio src={music.audio} id="audio" onTimeUpdate={e=>UpdateProgress(e)} /> */}
-                            <Link to='/recent'>
+                            <Link to='/musics'>
                             <Button   variant="contained" className="more_songs_btn" >More Songs</Button >
                             </Link>
                     </section>

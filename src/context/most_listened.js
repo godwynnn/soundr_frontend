@@ -68,7 +68,7 @@ export const MostListened=(props)=>{
 
 
 
-                                <div className={"music_overlay "+ (post.id == props.music_id && props.playing?'playing':'')} 
+                            <div className={"music_overlay "+ (post.id === JSON.parse(localStorage.getItem('music_id')) && JSON.parse(localStorage.getItem('playing'))?'playing':'')} 
                                 id={post.id}
                             
                                 onClick={(e)=>{props.setAudioSrc(e)

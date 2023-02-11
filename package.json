@@ -34,6 +34,7 @@
     "react-player": "^2.11.0",
     "react-router-dom": "^6.4.3",
     "react-scripts": "5.0.1",
+    "react-share-social": "^0.1.55",
     "rsuite": "^5.24.0",
     "swiper": "^8.4.5",
     "wavesurfer-react": "^2.2.2",

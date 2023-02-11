@@ -167,17 +167,36 @@ export  const Authenticate=()=>{
             }).then(res=>res.json()).then(data=>{
                 
                 console.log(data)
-                localStorage.setItem('token',data.token)
-                localStorage.setItem('logged_in',true)
-                setUserData(data.user)
-                setIsLoggedIn(true)
-                if (localStorage.getItem('logged_in')){
-                    // setIsLoggedIn(true)
-                    // Redirect back to previous location, or home
-                    const { state } = location;
-                    const { from } = state || { from: { pathname: "/" } };
-                    navigate(from, { replace: true });
+                if (data.status === 202){
+                    localStorage.setItem('token',data.token)
+                    localStorage.setItem('logged_in',true)
+                    setUserData(data.user)
+                    setIsLoggedIn(true)
+                    if (localStorage.getItem('logged_in')){
+                        // setIsLoggedIn(true)
+                        // Redirect back to previous location, or home
+                        const { state } = location;
+                        const { from } = state || { from: { pathname: "/" } };
+                        navigate(from, { replace: true });
+                    }
+                    
+                }else{
+                    if(data.wrong_credentials === true){
+                        // alert('incorrect username or password')
+                        document.getElementById('error_msg').style.display='block'
+                        document.getElementById('error_msg').innerHTML='<li style=color:red> incorrect username or password </li>'
+
+                        setTimeout(()=>{
+                            if(document.getElementById('error_msg').style.display=='block'){
+                                document.getElementById('error_msg').style.display='none'
+                                // document.getElementById('error_msg').style.transition='2s ease'
+                            }
+                        },4000)
+                    }
                 }
+                
+                
+                
             })
             
         })
@@ -217,7 +236,32 @@ export  const Authenticate=()=>{
                   },
                   body: JSON.stringify(user_data)
 
-            }).then(res=>res.json()).then(data=>console.log(data))
+            }).then(res=>res.json()).then(data=>{
+                console.log(data)
+
+                if(data.signed_in === true){
+                    document.getElementById('error_msg').style.display='block'
+                    document.getElementById('error_msg').innerHTML='<li style=color:green> Successfully signed up an activation token was sent your mail </li>'
+                    setTimeout(()=>{
+                        if(document.getElementById('error_msg').style.display=='block'){
+                            document.getElementById('error_msg').style.display='none'
+                            // document.getElementById('error_msg').style.transition='2s ease'
+                        }
+                    },4000)
+
+                }else{
+                    document.getElementById('error_msg').style.display='block'
+                    document.getElementById('error_msg').innerHTML=`<li style=color:green>${data.message}</li>`
+                    setTimeout(()=>{
+                        if(document.getElementById('error_msg').style.display=='block'){
+                            document.getElementById('error_msg').style.display='none'
+                            // document.getElementById('error_msg').style.transition='2s ease'
+                        }
+                    },4000)
+
+                }
+            
+            })
         }),
         
 
@@ -258,6 +302,8 @@ export  const Authenticate=()=>{
         : */}
         <div className="auth_bg">
                 <div className="auth_holder">
+                    
+
                     <div className="auth_toggle">
                         <div className="btn_box" id="btn_box" ref={btn_boxRef}></div>
 
@@ -265,6 +311,10 @@ export  const Authenticate=()=>{
                         <button onClick={registerButton} id='register_btnbox'>Sign up</button>
 
                     </div>
+
+                    <ul id="error_msg" >
+                        
+                    </ul>
                 <Box sx={{ display: 'flex', marginTop:'10%',flexDirection:'row',overflowX:'hidden'}}>
                 
                     <form className="login input-group" id="login" ref={loginRef} onSubmit={loginformik.handleSubmit}>

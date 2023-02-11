@@ -44,6 +44,7 @@ import { ScrollTrigger,gsap } from "gsap/all";
 import { Link } from "react-router-dom";
 import { useNavigate, useParams } from "react-router-dom";
 import { Detail } from "./detail";
+import { UserDetail } from "../usercontext/detail";
 import { Music } from "./allsongs";
 import { Authenticate } from "./auth";
 import { MostListened } from "./most_listened";
@@ -181,7 +182,7 @@ const Home=()=>{
              })
             .then(response=>response.json())
             .then(data=>{
-                console.log(data)
+                // console.log(data)
                 // localStorage.setItem('searchvalue','')
                 setPosts(data.music)
                 setPlaying(false)
@@ -196,25 +197,29 @@ const Home=()=>{
             
             
         };
-
+      
             // WINDOW RELOAD EVENT
-            window.onload=function(){
+            // window.onload=function(){
                 
-                localStorage.setItem('footer_playing',false)
-                localStorage.setItem('playing',false)
-                localStorage.removeItem('music_data')
-                // setSearched(true)
+            //     // localStorage.setItem('footer_playing',false);
+            //     // localStorage.setItem('playing',false);
+            //     localStorage.removeItem('music_data');
+            //     localStorage.setItem('music_id',null)
+            //     // setSearched(true)
                 
                 
                 
-            }
+            // }
 
 
 
             useEffect(()=>{
-                
+                localStorage.setItem('playing',false);
+                localStorage.setItem('footer_playing',false);
+                localStorage.removeItem('music_data');
+                localStorage.setItem('music_id',null)
                 setSearched(false)
-                getAllPosts(); 
+               
                 headerAnime()
     
                 // console.log(this)
@@ -279,6 +284,7 @@ const Home=()=>{
 
             // console.log(e)
             setMusicId(e.target.id)
+            localStorage.setItem('music_id',e.target.id)
             await fetch(`http://127.0.0.1:8000/${e.target.id}/play`).then(
                 response=>response.json()
                 ).then( data=>{
@@ -312,6 +318,7 @@ const Home=()=>{
                         let url=`http://127.0.0.1:8000/${posts[count].id}/play`
                         // posts[count].id
                         setMusicId(posts[count].id)
+                        localStorage.setItem('music_id',posts[count].id)
                         setPlaying(true)
 
 
@@ -339,6 +346,7 @@ const Home=()=>{
                         let url=`http://127.0.0.1:8000/${posts[count].id}/play`
                         // e=posts[count].id
                         setMusicId(posts[count].id)
+                        localStorage.setItem('music_id',posts[count].id)
                         setPlaying(true)
 
                         await fetch(url).then(response=>response.json()
@@ -448,6 +456,7 @@ const Home=()=>{
                     :
                             <Route path="/" element={<Index 
                                 posts={posts}
+                                getAllPosts={getAllPosts}
                                 music_id={music_id}
                                 playing={playing}
                                 setAudioSrc={(e)=>setAudioSrc(e)}
@@ -457,6 +466,13 @@ const Home=()=>{
                                 ref2={header_section2}
                                 addToFavourite={addToFavourite}
                             />}></Route>
+                    }
+
+
+                {JSON.parse(localStorage.getItem('logged_in'))?
+                            <Route path="/:id"  element={<UserDetail/>} />
+                    :
+                        <Route path="/:id"  element={<Detail/>} />
                     }
                     
 
@@ -532,6 +548,38 @@ export default Home
 
 export const Menu=()=>{
 
+    const baseUrl=`http://127.0.0.1:8000/user/profile`
+    const token=localStorage.getItem('token')
+    const [profile,setProfile]=useState([])
+    
+   
+    async function getAllProfile (){
+
+            // setLoading(true)
+            await fetch(baseUrl,{
+                method:'GET',
+                headers:{
+                    'Authorization':`Token ${token}`
+    
+                }
+    
+            })
+            .then((res)=>res.json()).then((data)=>{
+                setProfile(data.profile)
+                
+                // console.log(offset)
+                
+                console.log(data)
+               
+            })
+        }
+    
+
+    useEffect(()=>{
+        getAllProfile()
+    },[])
+
+    // console.log(profile.profile)
     return(
 
             <aside className="menu">
@@ -550,11 +598,19 @@ export const Menu=()=>{
 
                     </ul>
 
-
-                    <div className="profile_bottom">
+            {JSON.parse(localStorage.getItem('logged_in'))?
+                <div className="profile_bottom">
+                    <img src={'http://127.0.0.1:8000'+profile.image} />
+                    <p>{profile.first_name} {profile.second_name}</p>
+                </div>
+            :
+                <div className="profile_bottom">
                         <img src={user_img} />
                         <p>Miracle c Godwin</p>
                     </div>
+            
+            }
+                    
 
                 </aside>
 
@@ -565,7 +621,6 @@ export const Menu=()=>{
        
     )
 }
-
 
 
 

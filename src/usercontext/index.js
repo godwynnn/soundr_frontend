@@ -22,21 +22,33 @@ import '../css/allsongs.css'
 import { useNavigate, useParams,useLocation } from "react-router-dom";
 
 import { number } from "yup";
+import Spinner from 'react-bootstrap/Spinner'
 
+import CircularProgress from '@mui/material/CircularProgress';
 
 export const UserIndex=(props)=>{
 
 
     const navigate=useNavigate()
-    const baseUrl=`http://127.0.0.1:8000/`
+    const[offset,setOffSet]=useState(0)
+    const [limit,setLimit]=useState(2)
+    const[isLoading,setLoading]=useState(true)
+    const[musicCount,setMusicCount]=useState(0)
+    // console.log(musicCount)
 
     const[posts,setPosts]=useState([])
     const[page_num,setPageNumbers]=useState(1)
     const[postsCount,setPostsCount]=useState(0)
+    const baseUrl=`http://127.0.0.1:8000?limit=${limit}&offset=${offset}`
+    
     const token=localStorage.getItem('token')
+
+    const scrollSection=useRef()
 
 
     async function getAllPosts (){
+
+        setLoading(true)
         await fetch(baseUrl,{
             method:'GET',
             headers:{
@@ -46,12 +58,27 @@ export const UserIndex=(props)=>{
 
         })
         .then((res)=>res.json()).then((data)=>{
-            setPosts(data.music)
+            setPosts([...posts,...data.music])
+            setOffSet(offset+limit)
+            setLoading(false)
+            console.log(offset)
             
             console.log(data)
-            // setPosts(data.music)
+            setMusicCount(Math.floor(data.music_len/2))
             // setPlaying(false)
         })
+    }
+
+    // const showMorePosts=()=>{
+       
+    //     getAllPosts()
+    // }
+
+    window.onscroll=()=>{
+        if (document.documentElement.scrollHeight - 
+            document.documentElement.scrollTop === document.documentElement.clientHeight){
+            getAllPosts()
+        }
     }
 
 
@@ -68,6 +95,8 @@ export const UserIndex=(props)=>{
     },[])
 
 
+
+
     // const onChange = (pageNumber) => {
     //     console.log('Page: ', pageNumber);
     //   };
@@ -78,44 +107,7 @@ export const UserIndex=(props)=>{
     }
 
 
-    // let items = [];
-
-
-    //     function PaginateControls(pages){
-    //     const window_btn=3
-    //     const curr_page=1
-    //     let maxLeft = (curr_page - Math.floor(window_btn / 2))
-    //     let maxRight = (curr_page + Math.floor(window_btn/ 2))
-        
-
-    //     if (maxLeft < 1) {
-    //         maxLeft = 1
-    //         maxRight =window_btn
-    //     }
-
-    //     if (maxRight > pages) {
-    //         maxLeft = pages - (window_btn- 1)
-            
-    //         if (maxLeft < 1){
-    //             maxLeft = 1
-    //         }
-    //         maxRight = pages
-    //     }
-
-    
-    //     // let active = page_num;
-       
-    //     for (let number = maxLeft; number <= maxRight; number++) {
-    //             items.push(
-    //                 <Pagination.Item key={number} activeLabel=''>
-    //                 <Link onClick={()=>{changeUrl(baseUrl+`?page=${number-1}`)}} to={`?page=${number}`}>{number}</Link>
-    //                 </Pagination.Item>,
-    //             );
-    //     }}
-
-
-
-    // PaginateControls(page_num)
+ 
 
 
     function  FirstPage(){
@@ -136,105 +128,101 @@ export const UserIndex=(props)=>{
     return(
         <main className="landing">
    
-
-        <section className="section_1">
+    
+    <section className="section_1">
+                {isLoading?
+                            <Stack sx={{ color: 'grey.500',display:'flex',flexDirection:'row', justifyContent:'center'}} spacing={2} direction="row">
+                                        
+                            <CircularProgress color="inherit" />
+                        </Stack> 
+                
+                        :
                           
 
-                            <div className="section_1_holder">
+                    <div className="section_1_holder">
 
-                            
-                                    {posts.map((post,i)=>(
+                    
+                            {posts.map((post,i)=>(
 
-                                        <div className="songs_holder" key={i}  >
-
-
-                                                <div className={"music_container" } >
-                                                
-                                                                
-                                                    <img  className={"music_image "}
-
-                                                    // id={post.id}
-                                                    // onClick={(e)=>{setAudioSrc(e)}} 
-                                                    src={'http://127.0.0.1:8000'+post.image} key={i}></img>
-
-                                                
+                                <div className="songs_holder" key={i}  >
 
 
-                                                    {/* <button >
-                                                        <FontAwesomeIcon icon={post.id == music_id?icon:faPlay} 
-                                                        // onClick={(e)=> ''} 
-                                                        id="playBtn"  />
-                                                    </button> */}
-
-
-
-                                                    <div className={"music_overlay "+ (post.id == props.music_id && props.playing?'playing':'')} 
-                                                    id={post.id}
-                                                
-                                                    onClick={(e)=>{props.setAudioSrc(e)
-                                                    props.setNext(false)
-                                                    props.setCount(i)
-                                                    }}
-                                                    ></div>
-
-
-                                                    </div>
-                                            
+                                        <div className={"music_container" } >
                                         
-                                        
-                                                <div className="caption_holder">
-                                                <Link to={`/${post.slug}`}  >
-                                                    <div className="capt_hold">
-                                                        <p className="caption">{post.title}</p>
-                                                    </div>
-                                                    </Link>
-                                                   
+                                                        
+                                            <img  className={"music_image "}
 
-                                                     <div class="caption_menu">
-                                                         <a href={('http://127.0.0.1:8000'+post.audio)} download ><FontAwesomeIcon  icon={faDownload} /></a>
-                                                        <a href="#"> <FontAwesomeIcon  icon={faBookmark} /></a>
-                                                            
-                                                 </div> 
-                                                                                        
-                                                </div>
-                                                
-                                           
-                                                
-                                            
+                                            // id={post.id}
+                                            // onClick={(e)=>{setAudioSrc(e)}} 
+                                            src={'http://127.0.0.1:8000'+post.image} key={i}></img>
+
+                                        
+
+
+                                            {/* <button >
+                                                <FontAwesomeIcon icon={post.id == music_id?icon:faPlay} 
+                                                // onClick={(e)=> ''} 
+                                                id="playBtn"  />
+                                            </button> */}
+
+
+
+                                        <div className={"music_overlay "+ (post.id === JSON.parse(localStorage.getItem('music_id')) && JSON.parse(localStorage.getItem('playing'))?'playing':'')} 
+                                            id={post.id}
+                                        
+                                            onClick={(e)=>{props.setAudioSrc(e)
+                                            props.setNext(false)
+                                            props.setCount(i)
+                                            }}
+                                            ></div>
+
+
                                             </div>
-                                                
-                                                
-                                                )
-                                                
-                                            )}
                                     
-                            </div><br />
-                                    
-                                <br /><br /><br />
-                                {/* <audio src={music.audio} id="audio" onTimeUpdate={e=>UpdateProgress(e)} /> */}
                                 
-            </section>
+                                
+                                        <div className="caption_holder">
+                                        <Link to={`/${post.slug}`}  >
+                                            <div className="capt_hold">
+                                                <p className="caption">{post.title}</p>
+                                            </div>
+                                            </Link>
+                                            
 
-                    {/* <div className="paginate_nav">
-                     <Pagination.First  onClick={FirstPage}/>
-                        <Pagination  >{items}</Pagination>
-                    <Pagination.Last onClick={LastPage}/> 
+                                                <div class="caption_menu">
+                                                    <a href={('http://127.0.0.1:8000'+post.audio)} download ><FontAwesomeIcon  icon={faDownload} /></a>
+                                                <a href="#"> <FontAwesomeIcon  icon={faBookmark} /></a>
+                                                    
+                                            </div> 
+                                                                                
+                                        </div>
+                                        
+                                    
+                                        
+                                    
+                                    </div>
+                                        
+                                        
+                                        )
+                                        
+                                    )}
+                            
+                    </div>
+                        
+                               
+        }
+                             
+        </section>
+    
+     
+            
+            
+            <br /><br /><br />
 
-
-            <Stack spacing={2}>
-                <Pagination
-                        count={page_num} 
-                        showFirstButton 
-                        showLastButton
-                        hidePrevButton 
-                        hideNextButton
-                       
-                        // activePage={1}
-                        // onSelect={(e)=>{changeUrl(baseUrl+`?page=${e-1}`);navigate(`?page=${e}`)}}
-                        onChange={(e,value)=>{changeUrl(baseUrl+`?page=${value-1}`);navigate(`?page=${value}`)}}
-                    />
-                    </Stack>
-                    </div> */}
+            
+                                   
+           
+                    {/* <button onClick={showMorePosts}>Load more</button> */}
                    
     
         

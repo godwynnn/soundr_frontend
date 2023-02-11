@@ -28,11 +28,13 @@ export const Music=(props)=>{
 
 
     const navigate=useNavigate()
-    const baseUrl=`http://127.0.0.1:8000/recent`
+    
 
     const[posts,setPosts]=useState([])
     const[page_num,setPageNumbers]=useState(1)
     const[postsCount,setPostsCount]=useState(0)
+
+    const baseUrl=`http://127.0.0.1:8000/recent`
     
 
 
@@ -51,16 +53,21 @@ export const Music=(props)=>{
     useEffect(()=>{
         
         
-        if (localStorage.getItem('pageUrl')!=''){
-            getAllPosts(JSON.parse(localStorage.getItem('pageUrl')))
-        }else{
+        
             getAllPosts(baseUrl)
-        }
-
+        
         // getAllPosts(baseUrl)
            
     },[])
 
+
+    window.onload=()=>{
+        if (localStorage.getItem('pageUrl')!=''){
+            getAllPosts(JSON.parse(localStorage.getItem('pageUrl')))
+        }else{
+            getAllPosts()
+        }
+    }
 
     // const onChange = (pageNumber) => {
     //     console.log('Page: ', pageNumber);
@@ -162,7 +169,7 @@ export const Music=(props)=>{
 
 
 
-                                                    <div className={"music_overlay "+ (post.id == props.music_id && props.playing?'playing':'')} 
+                                                <div className={"music_overlay "+ (post.id === JSON.parse(localStorage.getItem('music_id')) && JSON.parse(localStorage.getItem('playing'))?'playing':'')} 
                                                     id={post.id}
                                                 
                                                     onClick={(e)=>{props.setAudioSrc(e)
@@ -202,33 +209,37 @@ export const Music=(props)=>{
                                                 
                                             )}
                                     
-                            </div><br />
+                            </div>
                                     
-                                <br /><br /><br />
-                                {/* <audio src={music.audio} id="audio" onTimeUpdate={e=>UpdateProgress(e)} /> */}
                                 
-            </section>
+                                {/* <audio src={music.audio} id="audio" onTimeUpdate={e=>UpdateProgress(e)} /> */}
 
-                    <div className="paginate_nav">
+
+                                <div className="paginate_nav">
                     {/* <Pagination.First  onClick={FirstPage}/>
                         <Pagination  >{items}</Pagination>
                     <Pagination.Last onClick={LastPage}/> */}
 
 
-            <Stack spacing={2}>
-                <Pagination
-                        count={page_num} 
-                        showFirstButton 
-                        showLastButton
-                        hidePrevButton 
-                        hideNextButton
-                       
-                        // activePage={1}
-                        // onSelect={(e)=>{changeUrl(baseUrl+`?page=${e-1}`);navigate(`?page=${e}`)}}
-                        onChange={(e,value)=>{changeUrl(baseUrl+`?page=${value-1}`);navigate(`?page=${value}`)}}
-                    />
-                    </Stack>
-                    </div>
+                    <Stack spacing={2}>
+                        <Pagination
+                                count={page_num} 
+                                showFirstButton 
+                                showLastButton
+                                hidePrevButton 
+                                hideNextButton
+                            
+                                // activePage={1}
+                                // onSelect={(e)=>{changeUrl(baseUrl+`?page=${e-1}`);navigate(`?page=${e}`)}}
+                                onChange={(e,value)=>{changeUrl(baseUrl+`?page=${value}`);navigate(`?page=${value}`);console.log(value)}}
+                            />
+                            </Stack>
+                    </div>       
+            </section>
+
+                    
+
+                    <br /><br />
                    
     
         

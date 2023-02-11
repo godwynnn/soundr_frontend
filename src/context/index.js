@@ -37,39 +37,9 @@ export const Index=React.forwardRef((props,ref1)=>{
 
 
         
-        // GSAP
-        // const header_section1=useRef(null);
-        // const header_section2=useRef(null);
-
-        // gsap.registerPlugin(ScrollTrigger);
-        // function headerAnime(){
-        //     gsap.fromTo(header_section1.current,{
-        //         x: -100,
-        //         opacity:-2,
-                
-        //     },{
-        //         x: 0,
-        //         duration:3,
-        //         delay:0,
-        //         opacity:1
-        //     })
-        //     gsap.fromTo(header_section2.current,{
-        //         x: -500,
-        //         opacity:-1,
-                
-        //     },{
-        //         x: 0,
-        //         duration:4.5,
-        //         delay:0,
-        //         opacity:0.7
-        //     })
-
-            
-        // }
-
-        // window.onload=function(){
-        //     headerAnime()
-        // }
+   useEffect(()=>{
+    props.getAllPosts()
+   },[])
     
 
     
@@ -153,7 +123,7 @@ export const Index=React.forwardRef((props,ref1)=>{
 
 
 
-                                                <div className={"music_overlay "+ (post.id == props.music_id && props.playing?'playing':'')} 
+                                                <div className={"music_overlay "+ (post.id === JSON.parse(localStorage.getItem('music_id')) && JSON.parse(localStorage.getItem('playing'))?'playing':'')} 
                                                 id={post.id}
                                             
                                                 onClick={(e)=>{props.setAudioSrc(e)

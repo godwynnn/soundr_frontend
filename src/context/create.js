@@ -105,6 +105,13 @@ const CreateUpload =()=>{
                 .then(data=>{
                     try{
                         console.log(data)
+                        formik.setFieldValue('artist_name','')
+                        formik.setFieldValue('title','')
+                        formik.setFieldValue('audio','')
+                        formik.setFieldValue('image','')
+                        formik.setFieldValue('description','')
+                        formik.setFieldValue('genre','')
+
                     }catch(error){
                         console.error(error)
                     }

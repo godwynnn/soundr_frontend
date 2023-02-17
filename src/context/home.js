@@ -49,6 +49,9 @@ import { Music } from "./allsongs";
 import { Authenticate } from "./auth";
 import { MostListened } from "./most_listened";
 import CreateUpload from "./create";
+import Packages from "./packages";
+import { PackageDetail } from "./packages";
+import UserPackages from "../usercontext/packages";
 // import Lettering from "./lettering";
 
 // import '../css/index.css'
@@ -214,10 +217,13 @@ const Home=()=>{
 
 
             useEffect(()=>{
+                getAllPosts()
                 localStorage.setItem('playing',false);
                 localStorage.setItem('footer_playing',false);
                 localStorage.removeItem('music_data');
                 localStorage.setItem('music_id',null)
+
+                // setMusicId(JSON.parse(localStorage.getItem('music_id')))
                 setSearched(false)
                
                 headerAnime()
@@ -282,9 +288,12 @@ const Home=()=>{
         const   setAudioSrc= async (e)=>{
             // let url=`http://127.0.0.1:8000/${e.target.id}/`
 
-            // console.log(e)
-            setMusicId(e.target.id)
+            console.log(music_id)
             localStorage.setItem('music_id',e.target.id)
+            setMusicId(e.target.id)
+
+            // const curr_musicId=localStorage.getItem('music_id')
+            
             await fetch(`http://127.0.0.1:8000/${e.target.id}/play`).then(
                 response=>response.json()
                 ).then( data=>{
@@ -449,6 +458,7 @@ const Home=()=>{
                                 setAudioSrc={(e)=>setAudioSrc(e)}
                                 setNext={setNext}
                                 setCount={setCount}
+                                setMusicId={setMusicId}
                                 // ref1={header_section1}
                                 // ref2={header_section2}
                                 addToFavourite={addToFavourite}
@@ -465,6 +475,7 @@ const Home=()=>{
                                 ref1={header_section1}
                                 ref2={header_section2}
                                 addToFavourite={addToFavourite}
+                                setMusicId={setMusicId}
                             />}></Route>
                     }
 
@@ -475,7 +486,14 @@ const Home=()=>{
                         <Route path="/:id"  element={<Detail/>} />
                     }
                     
-
+                {JSON.parse(localStorage.getItem('logged_in'))?
+                    <Route path="/packages" element={<UserPackages/>} />
+                    :
+                    <Route path="/packages" element={<Packages/>} />
+      
+                }
+                    
+                    
                 
 
                     <Route path="/:id"  element={<Detail/>} />
@@ -498,6 +516,12 @@ const Home=()=>{
                     />} />
 
                     <Route path="/create" element={<CreateUpload/>} >
+
+                    </Route>
+
+                    
+
+                    <Route path="/package/:packageId" element={<PackageDetail/>} >
 
                     </Route>
 
@@ -589,9 +613,16 @@ export const Menu=()=>{
                         
                         
                     <Link to='/'><li>home</li></Link>
-                    <Link  ><li>new release</li></Link>
+
+
+                    {JSON.parse(localStorage.getItem('logged_in'))?
+                    <Link  ><li>favourite</li></Link>
+                    :
+                    ''}
+                    
                     <Link  to={'/most-listened'}><li>most listened</li></Link>
                     <Link><li>genre</li></Link>
+                    <Link  to={'/packages'}><li>packages</li></Link>
                     <Link><li>contact</li></Link>
                         
                         

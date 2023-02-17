@@ -33,13 +33,33 @@ import AudioPlayer from 'react-h5-audio-player';
 
 import { Footer } from "./footer";
 
+
 export const Index=React.forwardRef((props,ref1)=>{
 
 
-        
-   useEffect(()=>{
-    props.getAllPosts()
-   },[])
+    gsap.registerPlugin(ScrollTrigger);
+    const feature_holder1=useRef()
+    const feature_holder2=useRef()
+
+    // gsap.fromTo(feature_holder1.current,{
+    //     scrollTrigger:{
+    //         trigger:feature_holder1.current,
+    //         start:'20px 80% ',
+    //         markers:true,
+    //     },
+
+    //     x: -100,
+    //     opacity:-2,
+    //     },{
+    //         x: 0,
+    //         duration:3,
+    //         delay:0.5,
+    //         opacity:1
+    //     })
+//    useEffect(()=>{
+//     // props.getAllPosts()
+//     // props.setMusicId(localStorage.getItem('music_id'))
+//    },[])
     
 
     
@@ -180,14 +200,14 @@ export const Index=React.forwardRef((props,ref1)=>{
                     
                 
                     <section className="featured">
-                        <div className="feature_holder">
+                        <div className="feature_holder" ref={feature_holder1}>
 
                             
 
                         </div>
 
                         
-                        <div className="feature_holder">
+                        <div className="feature_holder"  ref={feature_holder2}>
 
                             <div className="feature_content">
 

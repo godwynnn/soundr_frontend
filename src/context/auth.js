@@ -184,7 +184,7 @@ export  const Authenticate=()=>{
                     if(data.wrong_credentials === true){
                         // alert('incorrect username or password')
                         document.getElementById('error_msg').style.display='block'
-                        document.getElementById('error_msg').innerHTML='<li style=color:red> incorrect username or password </li>'
+                        document.getElementById('error_msg').innerHTML='<li style=color:red> incorrect Email or Password </li>'
 
                         setTimeout(()=>{
                             if(document.getElementById('error_msg').style.display=='block'){

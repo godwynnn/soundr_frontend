@@ -112,6 +112,19 @@ const CreateUpload =()=>{
                         formik.setFieldValue('description','')
                         formik.setFieldValue('genre','')
 
+                        if(data.status === false){
+                            // alert('incorrect username or password')
+                            document.getElementById('upload_msg').style.display='block'
+                            document.getElementById('upload_msg').innerHTML=`<li style=color:red>${data.message}</li>`
+    
+                            setTimeout(()=>{
+                                if(document.getElementById('upload_msg').style.display=='block'){
+                                    document.getElementById('upload_msg').style.display='none'
+                                    // document.getElementById('error_msg').style.transition='2s ease'
+                                }
+                            },10000)
+                        }
+
                     }catch(error){
                         console.error(error)
                     }
@@ -194,6 +207,9 @@ const CreateUpload =()=>{
                             <br />
 
                         <Button variant="contained" sx={{width:'30%'}} type='submit' >Submit</Button>
+                        <ul id="upload_msg">
+
+                        </ul>
         
 
                         

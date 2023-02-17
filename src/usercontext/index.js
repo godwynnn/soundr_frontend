@@ -124,6 +124,27 @@ export const UserIndex=(props)=>{
         
     }
 
+    
+    async function setFavourite(e){
+        console.log(e.target)
+        e.preventDefault()
+        const res=await fetch(`http://127.0.0.1:8000/add/favourite?music_id=${e.target.id}`,{
+            method:'POST',
+            headers:{
+                'Authorization':`Token ${token}`
+            }
+        })
+
+        const data=await res.json()
+
+        console.log(data)
+        if (data.favourite ===true){
+            e.target.style.color='#2B434E'
+        }else{
+            e.target.style.color='white'
+        }
+
+    }
 
     return(
         <main className="landing">
@@ -191,8 +212,8 @@ export const UserIndex=(props)=>{
 
                                                 <div class="caption_menu">
                                                     <a href={('http://127.0.0.1:8000'+post.audio)} download ><FontAwesomeIcon  icon={faDownload} /></a>
-                                                <a href="#"> <FontAwesomeIcon  icon={faBookmark} /></a>
-                                                    
+                                                <i  id={post.id} onClick={setFavourite} className="favourite fa-solid fa-bookmark "  style={post.user_favourite?{color:'#2B434E'}:{color:'white'}}></i>
+                                               
                                             </div> 
                                                                                 
                                         </div>

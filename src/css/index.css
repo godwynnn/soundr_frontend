@@ -468,6 +468,11 @@ body{
     text-decoration: none;
     /* border: 1px solid red; */
     width: 100%;
+    
+}
+.favourite{
+    cursor: pointer;
+    color: white;
 }
 .dropbtn {
     background-color: transparent;

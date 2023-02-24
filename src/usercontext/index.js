@@ -31,7 +31,7 @@ export const UserIndex=(props)=>{
 
     const navigate=useNavigate()
     const[offset,setOffSet]=useState(0)
-    const [limit,setLimit]=useState(2)
+    const [limit,setLimit]=useState(3)
     const[isLoading,setLoading]=useState(true)
     const[musicCount,setMusicCount]=useState(0)
     // console.log(musicCount)

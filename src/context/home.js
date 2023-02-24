@@ -52,6 +52,8 @@ import CreateUpload from "./create";
 import Packages from "./packages";
 import { PackageDetail } from "./packages";
 import UserPackages from "../usercontext/packages";
+import Favourite from "../usercontext/favourite";
+import Update from "./update";
 // import Lettering from "./lettering";
 
 // import '../css/index.css'
@@ -482,6 +484,7 @@ const Home=()=>{
 
                 {JSON.parse(localStorage.getItem('logged_in'))?
                             <Route path="/:id"  element={<UserDetail/>} />
+                            
                     :
                         <Route path="/:id"  element={<Detail/>} />
                     }
@@ -519,11 +522,16 @@ const Home=()=>{
 
                     </Route>
 
+                    <Route path="update/:id" element={<Update/>} />
+
+               
                     
 
                     <Route path="/package/:packageId" element={<PackageDetail/>} >
 
                     </Route>
+
+                    <Route  path="/favourite" element={<Favourite/>}/>
 
             </Routes>  
             
@@ -616,7 +624,7 @@ export const Menu=()=>{
 
 
                     {JSON.parse(localStorage.getItem('logged_in'))?
-                    <Link  ><li>favourite</li></Link>
+                    <Link to='/favourite' ><li>favourite</li></Link>
                     :
                     ''}
                     

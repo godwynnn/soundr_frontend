@@ -9,6 +9,7 @@ import { useLocation } from "react-router-dom";
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import {ShareSocial} from 'react-share-social' 
+import { HeroDetail } from "../context/HeroDetail";
 
 export const UserDetail=()=>{
     const navigate=useNavigate()
@@ -95,49 +96,6 @@ export const UserDetail=()=>{
     
     return(
 
-        <div className="detail_page" key={post.id}>
-            {/* <Navbar/> */}
-
-            
-                <div className="detail_page_content">
-                    {isLoading?
-                            <Stack sx={{ color: 'grey.500',display:'flex',flexDirection:'row', justifyContent:'center'}} spacing={2} direction="row">
-                                        
-                            <CircularProgress color="inherit" />
-                        </Stack> 
-                
-                    :
-
-
-                            <div className="detail_content_holder">
-                                    <div className="section1">
-                                        <img src={'http://127.0.0.1:8000'+post.image} alt="" />
-                                        <p>{post.artist_name}<br /><span>{post.title}</span></p>
-                                        
-                                    </div>
-
-                                    <div className="section2">
-                                            <div className="content_caption">
-                                                <p>{post.artist_name}</p>
-                                                <p>{post.title}</p><br />
-                                                {/* <ShareSocial 
-                                                    url ="url_to_share.com"
-                                                    socialTypes={['facebook','twitter','reddit','linkedin']}
-                                                /> */}
-                                            </div>
-                                            <div id="waveform"  ref={waveform}></div>
-                                        
-                                    </div>
-                            </div>
-                             }
-
-                </div>
-                   
-
-
-            
-
-
-        </div>
+        <HeroDetail post={post} isLoading={isLoading}/>
     )
 }

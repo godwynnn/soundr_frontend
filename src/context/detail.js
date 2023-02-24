@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
+import { Button } from "@mui/material";
+import { HeroDetail } from "./HeroDetail";
 
 export const Detail=()=>{
     const navigate=useNavigate()
@@ -90,45 +92,7 @@ export const Detail=()=>{
     
     return(
 
-        <div className="detail_page" key={post.id}>
-            {/* <Navbar/> */}
+        <HeroDetail post={post} isLoading={isLoading}/>
 
-            
-                <div className="detail_page_content">
-                    {isLoading?
-                            <Stack sx={{ color: 'grey.500',display:'flex',flexDirection:'row', justifyContent:'center'}} spacing={2} direction="row">
-                                        
-                            <CircularProgress color="inherit" />
-                        </Stack> 
-                
-                    :
-
-
-                            <div className="detail_content_holder">
-                                    <div className="section1">
-                                        <img src={'http://127.0.0.1:8000'+post.image} alt="" />
-                                        <p>{post.artist_name}<br /><span>{post.title}</span></p>
-                                        
-                                    </div>
-
-                                    <div className="section2">
-                                            <div className="content_caption">
-                                                <p>{post.artist_name}</p>
-                                                <p>{post.title}</p>
-                                            </div>
-                                            <div id="waveform"  ref={waveform}></div>
-                                        
-                                    </div>
-                            </div>
-                             }
-
-                </div>
-                   
-
-
-            
-
-
-        </div>
     )
 }

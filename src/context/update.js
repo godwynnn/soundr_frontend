@@ -52,8 +52,14 @@ export default function Update(){
                 headers:{'Authorization':`Token ${token}`},
             })
             const data= await res.json()
+            // const new_data=await res.blob()
             console.log(data)
+
             setSongGenre(data.genre)
+            // const song=data.music.audio.split('/')
+            // console.log(data.music.audio.split('/')[data.music.audio.split('/').length-1])
+            
+        
 
 
             setSongDetail({
@@ -62,21 +68,35 @@ export default function Update(){
                 audioFile:data.music.audio,
                 imageFile:data.music.image,
                 description:data.music.description,
-                genre:data.music.genre
-
-
-
+                genre:data.music.genre,
             })
+            // const audio_blob = new Blob([data.music.audio]);
+            const audio = new File([data.music.audio],  data.music.audio.split('/')[data.music.audio.split('/').length-1]);
+
+
+            // const image_blob = new Blob([data.music.image]);
+            const image = new File([data.music.image], data.music.image.split('/')[data.music.image.split('/').length-1]);
+
+            // console.log(data.music.audio.blob())
+
+            
+            formik.setFieldValue('artist_name',data.music.artist_name)
+            formik.setFieldValue('title',data.music.title)
+            formik.setFieldValue('audio',audio)
+            formik.setFieldValue('image',image)
+            formik.setFieldValue('description',data.music.description)
+            formik.setFieldValue('genre',data.music.genre)
 
 
 
         }
+        // const song_detail=this.songDetail
 
 
         const formik=useFormik({
-            
+    
             initialValues:{
-                artist_name:songDetail.artist_name,
+                artist_name:'',
                 title:"",
                 // audio:"",
                 // image:"",
@@ -92,6 +112,7 @@ export default function Update(){
                 
     
                 }),
+                
             
                 onSubmit:((values)=>{
                     const token=localStorage.getItem('token')
@@ -113,16 +134,20 @@ export default function Update(){
                     data.append('image',values.image)
                     data.append('description',values.description)
                     data.append('genre',values.genre)
+
+
+                    // console.log(typeof(values.audio))
     
     
                     console.log(data)
-                    fetch('http://127.0.0.1:8000/create',{
-                        method:"POST",
+                    console.log(formik.values)
+                    fetch(`http://127.0.0.1:8000/update/${param.id}`,{
+                        method:"PUT",
                         body:data,
                         headers:{
                             // "Content-Type": "application/x-www-form-urlencoded",
-                            // "Accept":"application/json",
-                            // 'Content-Type': 'multipart/form-data'
+                            // "Accept":"multipart/form-data",
+                            // 'Content-Type': 'multipart/form-data',
                             'Authorization':`Token ${token}`,
                         },
                         

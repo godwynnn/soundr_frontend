@@ -89,6 +89,7 @@ const CreateUpload =()=>{
                 data.append('description',values.description)
                 data.append('genre',values.genre)
 
+                
 
                 console.log(data)
                 fetch('http://127.0.0.1:8000/create',{
